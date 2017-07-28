@@ -5,7 +5,7 @@
       <!-- simple box logo -->
       <div class="row">
         <img ng-if="logo" ng-src="{{ logo }}" class="simple-box-logo">
-        <img ng-if="!logo" src="images/logo_alt.png" class="simple-box-logo" alt="Portainer">
+        <img ng-if="!logo" src="images/logo_alt.png" class="simple-box-logo" alt="Click2Cloud DockM">
       </div>
       <!-- !simple box logo -->
       <!-- init-endpoint panel -->
@@ -15,13 +15,13 @@
           <form class="form-horizontal" style="margin: 20px;" enctype="multipart/form-data" method="POST">
             <!-- comment -->
             <div class="form-group" style="text-align: center;">
-              <h4>Connect Portainer to a Docker engine or Swarm cluster endpoint</h4>
+              <h4>Connect Click2Cloud DockM to a Docker engine or Swarm cluster endpoint</h4>
             </div>
             <!-- !comment input -->
             <!-- endpoin-type radio -->
             <div class="form-group">
               <div class="radio">
-                <label><input type="radio" name="endpointType" value="local" ng-model="formValues.endpointType" ng-click="resetErrorMessage()">Manage the Docker instance where Portainer is running</label>
+                <label><input type="radio" name="endpointType" value="local" ng-model="formValues.endpointType" ng-click="resetErrorMessage()">Manage the Docker instance where Click2Cloud DockM is running</label>
               </div>
               <div class="radio">
                 <label><input type="radio" name="endpointType" value="remote" ng-model="formValues.endpointType" ng-click="resetErrorMessage()">Manage a remote Docker instance</label>
@@ -33,7 +33,7 @@
               <div class="form-group">
                 <i class="fa fa-exclamation-triangle" aria-hidden="true" style="margin-right: 5px;"></i>
                 <span class="small text-primary">This feature is not yet available for native Docker Windows containers.</span>
-                <div class="small text-primary">On Linux and when using Docker for Mac or Docker for Windows or Docker Toolbox, ensure that you have started Portainer container with the following Docker flag <code>-v "/var/run/docker.sock:/var/run/docker.sock"</code></div>
+                <div class="small text-primary">On Linux and when using Docker for Mac or Docker for Windows or Docker Toolbox, ensure that you have started Click2Cloud DockM container with the following Docker flag <code>-v "/var/run/docker.sock:/var/run/docker.sock"</code></div>
               </div>
               <!-- connect button -->
               <div class="form-group" style="margin-top: 10px;">

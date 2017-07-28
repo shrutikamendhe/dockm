@@ -8,7 +8,10 @@ html, body, #content-wrapper, .page-content, #view {
 }
 
 .btn-group button {
-  margin: 3px;
+  margin-left: 3px;
+  margin-top: 3px;
+  margin-bottom: 3px;
+  margin-right: 7px;  
 }
 
 .messages {
@@ -281,9 +284,9 @@ a[ng-click]{
   margin: 0 auto;
 }
 
-ul.sidebar {
+/*ul.sidebar {
   bottom: 40px;
-}
+}*/
 
 ul.sidebar .sidebar-title {
   height: auto;
@@ -293,7 +296,7 @@ ul.sidebar .sidebar-list a.active {
   color: #fff;
   text-indent: 22px;
   border-left: 3px solid #fff;
-  background: #2d3e63;
+  background: #1a2226;
 }
 
 #image-layers .btn{
@@ -522,4 +525,90 @@ ul.sidebar .sidebar-list .sidebar-sublist a.active {
 .monospaced {
   font-family: monospace;
   font-weight: 600;
+}
+
+/* ==============================Click2Cloud CSS Changes====================== */
+
+/* Dashboard circle bkg color */
+#page-wrapper,
+	#sidebar-wrapper {
+	}
+	.blue {
+	  background: #3498db !important;
+}
+/* Sidebar header, footer and body color */
+#sidebar-wrapper {
+  background: #222d32; !important;
+}
+ul.sidebar .sidebar-main a,
+.sidebar-footer,
+ul.sidebar .sidebar-list a:hover,
+#page-wrapper:not(.open) ul.sidebar .sidebar-title.separator {
+	  background: #1a2226; !important;
+}
+ul.sidebar .sidebar-list .sidebar-sublist a.active {
+  background: #1a2226 !important;
+}
+/* Sidebar content color and size */
+ul.sidebar .sidebar-list a {
+	  font-size: 13px !important;
+	  color: #b8c7ce !important;
+}
+/* Sidebar Spliter menu color */
+ul.sidebar .sidebar-title {
+	  color: #4b646f !important;
+}
+/* Sidebar on mouse hover small strip color */
+ul.sidebar .sidebar-list a:hover {
+	  border-left: 3px solid #37B7EE !important;
+}
+#page-wrapper:not(.open) ul.sidebar .sidebar-list a:hover span {
+	  border-left: 3px solid #37B7EE !important;
+}
+/* App template list content style */
+.template-container {
+  color: #5D6D7E;
+  font-size: 12px;
+}
+.template-container--selected {
+  color: #1a2226 !important;
+}
+.template-container:hover {
+  color: #1a2226 !important;
+}
+/* header style */
+.row.header {
+  background: #37B7EE !important;
+}
+.text-danger {
+	  color: #900C3E !important;
+}
+/*
+.text-danger:hover {
+    color: #900C3E !important; #C70039
+}*/
+.text-my-account {
+	  color: #900C3E;
+}
+.text-my-account:hover {
+    color: #900C3E;
+}
+.meta .pull-left a {
+  color: #154360 !important;
+}
+/* header refresh and spin image */
+.header-refresh {
+	  color: #B8C7CE;
+}
+.header-refresh:hover {
+    color: #AED6F1;
+}
+.header-spin {
+	  color: #B8C7CE;
+}
+.meta, .widget {
+  margin-left: 7px !important;
+}
+.btn-group button span {
+  margin-left: 5px;
 }

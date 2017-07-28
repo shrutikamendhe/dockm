@@ -1,9 +1,9 @@
 <rd-header>
   <rd-header-title title="Users">
     <a data-toggle="tooltip" title="Refresh" ui-sref="users" ui-sref-opts="{reload: true}">
-      <i class="fa fa-refresh" aria-hidden="true"></i>
+     <span class="header-refresh"> <i class="fa fa-refresh" aria-hidden="true"></i></span>
     </a>
-    <i id="loadUsersSpinner" class="fa fa-cog fa-spin" style="margin-left: 5px;"></i>
+    <span class="header-spin"><i id="loadUsersSpinner" class="fa fa-cog fa-spin" style="margin-left: 5px;"></i></span>
   </rd-header-title>
   <rd-header-content>User management</rd-header-content>
 </rd-header>
@@ -54,7 +54,7 @@
             <div class="col-sm-12">
               <label for="permissions" class="control-label text-left">
                 Administrator
-                <portainer-tooltip position="bottom" message="Administrators have access to Portainer settings management as well as full control over all defined endpoints and their resources."></portainer-tooltip>
+                <portainer-tooltip position="bottom" message="Administrators have access to Click2Cloud DockM settings management as well as full control over all defined endpoints and their resources."></portainer-tooltip>
               </label>
               <label class="switch" style="margin-left: 20px;">
                 <input type="checkbox" ng-model="formValues.Administrator"><i></i>

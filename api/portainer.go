@@ -340,7 +340,7 @@ const (
 	// DBVersion is the version number of the Portainer database.
 	DBVersion = 2
 	// DefaultTemplatesURL represents the default URL for the templates definitions.
-	DefaultTemplatesURL = "https://raw.githubusercontent.com/portainer/templates/master/templates.json"
+	DefaultTemplatesURL = "https://raw.githubusercontent.com/Click2Cloud/templates/master/templates.json"
 )
 
 const (

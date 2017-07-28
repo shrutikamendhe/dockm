@@ -1,6 +1,6 @@
 <rd-header>
   <rd-header-title title="Create stack">
-    <i id="loadingViewSpinner" class="fa fa-cog fa-spin" style="display: none;"></i>
+    <span class="header-spin"><i id="loadingViewSpinner" class="fa fa-cog fa-spin" style="display: none;"></i></span>
   </rd-header-title>
   <rd-header-content>
     <a ui-sref="stacks">Stacks</a> > Add stack
@@ -144,7 +144,7 @@
             </div>
             <div class="form-group">
               <div class="col-sm-12">
-                <input type="text" class="form-control" ng-model="formValues.RepositoryURL" placeholder="https://github.com/portainer/compose.git">
+                <input type="text" class="form-control" ng-model="formValues.RepositoryURL" placeholder="https://github.com/click2cloud/compose.git">
               </div>
             </div>
           </div>

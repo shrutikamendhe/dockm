@@ -1,9 +1,9 @@
 <rd-header id="view-top">
   <rd-header-title title="Application templates list">
     <a data-toggle="tooltip" title="Refresh" ui-sref="templates" ui-sref-opts="{reload: true}">
-      <i class="fa fa-refresh" aria-hidden="true"></i>
+     <span class="header-refresh"><i class="fa fa-refresh" aria-hidden="true"></i></span>
     </a>
-    <i id="loadTemplatesSpinner" class="fa fa-cog fa-spin" style="margin-left: 5px;"></i>
+    <span class="header-spin"><i id="loadTemplatesSpinner" class="fa fa-cog fa-spin" style="margin-left: 5px;"></i></span>
   </rd-header-title>
   <rd-header-content>Templates</rd-header-content>
 </rd-header>
@@ -90,7 +90,7 @@
                 </span>
               </div>
               <div class="col-sm-12" style="margin-top: 10px" ng-if="state.selectedTemplate.Ports.length > 0">
-                <span class="small text-muted">Portainer will automatically assign a port if you leave the host port empty.</span>
+                <span class="small text-muted">Click2Cloud DockM will automatically assign a port if you leave the host port empty.</span>
               </div>
               <!-- !port-mapping -->
               <!-- port-mapping-input-list -->
@@ -221,7 +221,7 @@
 
   <div class="col-sm-12" style="height: 100%">
     <rd-template-widget>
-      <rd-widget-header icon="fa-rocket" title="Templates">
+      <rd-widget-header icon="fa-space-shuttle" title="Templates">
         <div ng-if="availableCategories.length > 0" class="pull-right">
           Category
           <select ng-model="state.filters.Categories">
