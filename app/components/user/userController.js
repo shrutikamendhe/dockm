@@ -14,7 +14,7 @@ function ($q, $scope, $state, $stateParams, UserService, ModalService, Notificat
 
   $scope.deleteUser = function() {
     ModalService.confirmDeletion(
-      'Do you want to remove this user? This user will not be able to login into Portainer anymore.',
+      'Do you want to remove this user? This user will not be able to login into Click2Cloud DockM anymore.',
       function onConfirm(confirmed) {
         if(!confirmed) { return; }
         deleteUser();

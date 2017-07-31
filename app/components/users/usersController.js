@@ -109,7 +109,7 @@ function ($q, $scope, $state, $sanitize, UserService, TeamService, TeamMembershi
 
   $scope.removeAction = function () {
     ModalService.confirmDeletion(
-      'Do you want to remove the selected users? They will not be able to login into Portainer anymore.',
+      'Do you want to remove the selected users? They will not be able to login into Click2Cloud DockM anymore.',
       function onConfirm(confirmed) {
         if(!confirmed) { return; }
         deleteSelectedUsers();

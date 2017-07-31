@@ -598,13 +598,13 @@ ul.sidebar .sidebar-list a:hover {
 }
 /* header refresh and spin image */
 .header-refresh {
-	  color: #B8C7CE;
+	  color: #337AB7;
 }
 .header-refresh:hover {
-    color: #AED6F1;
+    color: #204D74;
 }
 .header-spin {
-	  color: #B8C7CE;
+	  color: #204D74;
 }
 .meta, .widget {
   margin-left: 7px !important;

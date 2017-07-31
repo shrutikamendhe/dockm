@@ -180,7 +180,7 @@ module.exports = function (grunt) {
       run: {
         command: [
           'docker rm -f click2cloud',
-          'docker run -d -p 9003:9000 -v $(pwd)/dist:/app -v $(pwd)/data:/data -v /var/run/docker.sock:/var/run/docker.sock:z --name click2cloud portainer/base /app/portainer-linux-amd64 --no-analytics -a /app'
+          'docker run -d -p 9003:9000 -v $(pwd)/dist:/app -v $(pwd)/data:/data --name click2cloud portainer/base /app/portainer-linux-amd64 --no-analytics -a /app'
         ].join(';')
       }
     },
