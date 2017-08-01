@@ -1,6 +1,6 @@
 FROM portainer/base
 
-COPY dist /
+COPY dist app/
 
 VOLUME /data
 
@@ -8,4 +8,4 @@ WORKDIR /
 
 EXPOSE 9000
 
-ENTRYPOINT ["/portainer"]
+ENTRYPOINT ["/app/portainer-linux-amd64"]

@@ -4,5 +4,4 @@ dist
 portainer-checksum.txt
 api/cmd/portainer/portainer*
 .tmp
-data
-gruntfile.js
+userdata
