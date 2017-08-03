@@ -27,7 +27,7 @@
             <div class="col-sm-12">
               <label for="registry_auth" class="control-label text-left">
                 Authentication
-                <portainer-tooltip position="bottom" message="Enable this option if you need to specify credentials to connect to push/pull private images."></portainer-tooltip>
+                <dockm-tooltip position="bottom" message="Enable this option if you need to specify credentials to connect to push/pull private images."></dockm-tooltip>
               </label>
               <label class="switch" style="margin-left: 20px;">
                 <input type="checkbox" ng-model="dockerhub.Authentication"><i></i>
@@ -122,7 +122,7 @@
                 <td>
                   <a ui-sref="registry({id: registry.Id})">{{ registry.Name }}</a>
                   <span ng-if="registry.Authentication" style="margin-left: 5px;">
-                    <i class="fa fa-shield" aria-hidden="true" tooltip-placement="bottom" tooltip-class="portainer-tooltip" uib-tooltip="Authentication is enabled for this registry."></i>
+                    <i class="fa fa-shield" aria-hidden="true" tooltip-placement="bottom" tooltip-class="dockm-tooltip" uib-tooltip="Authentication is enabled for this registry."></i>
                   </span>
                 </td>
                 <td>{{ registry.URL }}</td>

@@ -1,4 +1,4 @@
-angular.module('portainer.rest')
+angular.module('dockm.rest')
 .factory('System', ['$resource', 'API_ENDPOINT_ENDPOINTS', 'EndpointProvider', function SystemFactory($resource, API_ENDPOINT_ENDPOINTS, EndpointProvider) {
   'use strict';
   return $resource(API_ENDPOINT_ENDPOINTS + '/:endpointId/docker/:action/:subAction', {

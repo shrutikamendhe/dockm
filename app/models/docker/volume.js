@@ -10,9 +10,9 @@ function VolumeViewModel(data) {
   }
   this.Mountpoint = data.Mountpoint;
 
-  if (data.Portainer) {
-    if (data.Portainer.ResourceControl) {
-      this.ResourceControl = new ResourceControlViewModel(data.Portainer.ResourceControl);
+  if (data.dockm) {
+    if (data.dockm.ResourceControl) {
+      this.ResourceControl = new ResourceControlViewModel(data.dockm.ResourceControl);
     }
   }
 }

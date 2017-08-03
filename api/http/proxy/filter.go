@@ -1,11 +1,11 @@
 package proxy
 
-import "github.com/portainer/portainer"
+import "github.com/shrutikamendhe/dockm/api"
 
 // filterVolumeList loops through all volumes, filters volumes without any resource control (public resources) or with
 // any resource control giving access to the user (these volumes will be decorated).
 // Volume object schema reference: https://docs.docker.com/engine/api/v1.28/#operation/VolumeList
-func filterVolumeList(volumeData []interface{}, resourceControls []portainer.ResourceControl, userID portainer.UserID, userTeamIDs []portainer.TeamID) ([]interface{}, error) {
+func filterVolumeList(volumeData []interface{}, resourceControls []dockm.ResourceControl, userID dockm.UserID, userTeamIDs []dockm.TeamID) ([]interface{}, error) {
 	filteredVolumeData := make([]interface{}, 0)
 
 	for _, volume := range volumeData {
@@ -30,7 +30,7 @@ func filterVolumeList(volumeData []interface{}, resourceControls []portainer.Res
 // filterContainerList loops through all containers, filters containers without any resource control (public resources) or with
 // any resource control giving access to the user (check on container ID and optional Swarm service ID, these containers will be decorated).
 // Container object schema reference: https://docs.docker.com/engine/api/v1.28/#operation/ContainerList
-func filterContainerList(containerData []interface{}, resourceControls []portainer.ResourceControl, userID portainer.UserID, userTeamIDs []portainer.TeamID) ([]interface{}, error) {
+func filterContainerList(containerData []interface{}, resourceControls []dockm.ResourceControl, userID dockm.UserID, userTeamIDs []dockm.TeamID) ([]interface{}, error) {
 	filteredContainerData := make([]interface{}, 0)
 
 	for _, container := range containerData {
@@ -67,7 +67,7 @@ func filterContainerList(containerData []interface{}, resourceControls []portain
 
 // filterContainersWithLabels loops through a list of containers, and filters containers that do not contains
 // any labels in the labels black list.
-func filterContainersWithBlackListedLabels(containerData []interface{}, labelBlackList []portainer.Pair) ([]interface{}, error) {
+func filterContainersWithBlackListedLabels(containerData []interface{}, labelBlackList []dockm.Pair) ([]interface{}, error) {
 	filteredContainerData := make([]interface{}, 0)
 
 	for _, container := range containerData {
@@ -89,7 +89,7 @@ func filterContainersWithBlackListedLabels(containerData []interface{}, labelBla
 // filterServiceList loops through all services, filters services without any resource control (public resources) or with
 // any resource control giving access to the user (these services will be decorated).
 // Service object schema reference: https://docs.docker.com/engine/api/v1.28/#operation/ServiceList
-func filterServiceList(serviceData []interface{}, resourceControls []portainer.ResourceControl, userID portainer.UserID, userTeamIDs []portainer.TeamID) ([]interface{}, error) {
+func filterServiceList(serviceData []interface{}, resourceControls []dockm.ResourceControl, userID dockm.UserID, userTeamIDs []dockm.TeamID) ([]interface{}, error) {
 	filteredServiceData := make([]interface{}, 0)
 
 	for _, service := range serviceData {

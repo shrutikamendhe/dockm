@@ -1,9 +1,9 @@
 package handler
 
 import (
-	"github.com/portainer/portainer"
-	httperror "github.com/portainer/portainer/http/error"
-	"github.com/portainer/portainer/http/security"
+	"github.com/shrutikamendhe/dockm/api"
+	httperror "github.com/shrutikamendhe/dockm/api/http/error"
+	"github.com/shrutikamendhe/dockm/api/http/security"
 
 	"encoding/json"
 	"log"
@@ -19,7 +19,7 @@ import (
 type RegistryHandler struct {
 	*mux.Router
 	Logger          *log.Logger
-	RegistryService portainer.RegistryService
+	RegistryService dockm.RegistryService
 }
 
 // NewRegistryHandler returns a new instance of RegistryHandler.
@@ -88,19 +88,19 @@ func (handler *RegistryHandler) handlePostRegistries(w http.ResponseWriter, r *h
 	}
 	for _, r := range registries {
 		if r.URL == req.URL {
-			httperror.WriteErrorResponse(w, portainer.ErrRegistryAlreadyExists, http.StatusConflict, handler.Logger)
+			httperror.WriteErrorResponse(w, dockm.ErrRegistryAlreadyExists, http.StatusConflict, handler.Logger)
 			return
 		}
 	}
 
-	registry := &portainer.Registry{
+	registry := &dockm.Registry{
 		Name:            req.Name,
 		URL:             req.URL,
 		Authentication:  req.Authentication,
 		Username:        req.Username,
 		Password:        req.Password,
-		AuthorizedUsers: []portainer.UserID{},
-		AuthorizedTeams: []portainer.TeamID{},
+		AuthorizedUsers: []dockm.UserID{},
+		AuthorizedTeams: []dockm.TeamID{},
 	}
 
 	err = handler.RegistryService.CreateRegistry(registry)
@@ -135,8 +135,8 @@ func (handler *RegistryHandler) handleGetRegistry(w http.ResponseWriter, r *http
 		return
 	}
 
-	registry, err := handler.RegistryService.Registry(portainer.RegistryID(registryID))
-	if err == portainer.ErrRegistryNotFound {
+	registry, err := handler.RegistryService.Registry(dockm.RegistryID(registryID))
+	if err == dockm.ErrRegistryNotFound {
 		httperror.WriteErrorResponse(w, err, http.StatusNotFound, handler.Logger)
 		return
 	} else if err != nil {
@@ -170,8 +170,8 @@ func (handler *RegistryHandler) handlePutRegistryAccess(w http.ResponseWriter, r
 		return
 	}
 
-	registry, err := handler.RegistryService.Registry(portainer.RegistryID(registryID))
-	if err == portainer.ErrRegistryNotFound {
+	registry, err := handler.RegistryService.Registry(dockm.RegistryID(registryID))
+	if err == dockm.ErrRegistryNotFound {
 		httperror.WriteErrorResponse(w, err, http.StatusNotFound, handler.Logger)
 		return
 	} else if err != nil {
@@ -180,17 +180,17 @@ func (handler *RegistryHandler) handlePutRegistryAccess(w http.ResponseWriter, r
 	}
 
 	if req.AuthorizedUsers != nil {
-		authorizedUserIDs := []portainer.UserID{}
+		authorizedUserIDs := []dockm.UserID{}
 		for _, value := range req.AuthorizedUsers {
-			authorizedUserIDs = append(authorizedUserIDs, portainer.UserID(value))
+			authorizedUserIDs = append(authorizedUserIDs, dockm.UserID(value))
 		}
 		registry.AuthorizedUsers = authorizedUserIDs
 	}
 
 	if req.AuthorizedTeams != nil {
-		authorizedTeamIDs := []portainer.TeamID{}
+		authorizedTeamIDs := []dockm.TeamID{}
 		for _, value := range req.AuthorizedTeams {
-			authorizedTeamIDs = append(authorizedTeamIDs, portainer.TeamID(value))
+			authorizedTeamIDs = append(authorizedTeamIDs, dockm.TeamID(value))
 		}
 		registry.AuthorizedTeams = authorizedTeamIDs
 	}
@@ -230,8 +230,8 @@ func (handler *RegistryHandler) handlePutRegistry(w http.ResponseWriter, r *http
 		return
 	}
 
-	registry, err := handler.RegistryService.Registry(portainer.RegistryID(registryID))
-	if err == portainer.ErrRegistryNotFound {
+	registry, err := handler.RegistryService.Registry(dockm.RegistryID(registryID))
+	if err == dockm.ErrRegistryNotFound {
 		httperror.WriteErrorResponse(w, err, http.StatusNotFound, handler.Logger)
 		return
 	} else if err != nil {
@@ -246,7 +246,7 @@ func (handler *RegistryHandler) handlePutRegistry(w http.ResponseWriter, r *http
 	}
 	for _, r := range registries {
 		if r.URL == req.URL && r.ID != registry.ID {
-			httperror.WriteErrorResponse(w, portainer.ErrRegistryAlreadyExists, http.StatusConflict, handler.Logger)
+			httperror.WriteErrorResponse(w, dockm.ErrRegistryAlreadyExists, http.StatusConflict, handler.Logger)
 			return
 		}
 	}
@@ -295,8 +295,8 @@ func (handler *RegistryHandler) handleDeleteRegistry(w http.ResponseWriter, r *h
 		return
 	}
 
-	_, err = handler.RegistryService.Registry(portainer.RegistryID(registryID))
-	if err == portainer.ErrRegistryNotFound {
+	_, err = handler.RegistryService.Registry(dockm.RegistryID(registryID))
+	if err == dockm.ErrRegistryNotFound {
 		httperror.WriteErrorResponse(w, err, http.StatusNotFound, handler.Logger)
 		return
 	} else if err != nil {
@@ -304,7 +304,7 @@ func (handler *RegistryHandler) handleDeleteRegistry(w http.ResponseWriter, r *h
 		return
 	}
 
-	err = handler.RegistryService.DeleteRegistry(portainer.RegistryID(registryID))
+	err = handler.RegistryService.DeleteRegistry(dockm.RegistryID(registryID))
 	if err != nil {
 		httperror.WriteErrorResponse(w, err, http.StatusInternalServerError, handler.Logger)
 		return

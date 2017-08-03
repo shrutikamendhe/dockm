@@ -1,4 +1,4 @@
-angular.module('portainer.services')
+angular.module('dockm.services')
 .factory('ContainerService', ['$q', 'Container', 'ResourceControlService', function ContainerServiceFactory($q, Container, ResourceControlService) {
   'use strict';
   var service = {};

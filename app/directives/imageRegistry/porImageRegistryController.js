@@ -1,4 +1,4 @@
-angular.module('portainer')
+angular.module('dockm')
 .controller('porImageRegistryController', ['$q', 'RegistryService', 'DockerHubService', 'Notifications',
 function ($q, RegistryService, DockerHubService, Notifications) {
   var ctrl = this;

@@ -3,9 +3,9 @@ package handler
 import (
 	"strconv"
 
-	"github.com/portainer/portainer"
-	httperror "github.com/portainer/portainer/http/error"
-	"github.com/portainer/portainer/http/security"
+	"github.com/shrutikamendhe/dockm/api"
+	httperror "github.com/shrutikamendhe/dockm/api/http/error"
+	"github.com/shrutikamendhe/dockm/api/http/security"
 
 	"encoding/json"
 	"log"
@@ -20,9 +20,9 @@ import (
 type TeamHandler struct {
 	*mux.Router
 	Logger                 *log.Logger
-	TeamService            portainer.TeamService
-	TeamMembershipService  portainer.TeamMembershipService
-	ResourceControlService portainer.ResourceControlService
+	TeamService            dockm.TeamService
+	TeamMembershipService  dockm.TeamMembershipService
+	ResourceControlService dockm.ResourceControlService
 }
 
 // NewTeamHandler returns a new instance of TeamHandler.
@@ -62,16 +62,16 @@ func (handler *TeamHandler) handlePostTeams(w http.ResponseWriter, r *http.Reque
 	}
 
 	team, err := handler.TeamService.TeamByName(req.Name)
-	if err != nil && err != portainer.ErrTeamNotFound {
+	if err != nil && err != dockm.ErrTeamNotFound {
 		httperror.WriteErrorResponse(w, err, http.StatusInternalServerError, handler.Logger)
 		return
 	}
 	if team != nil {
-		httperror.WriteErrorResponse(w, portainer.ErrTeamAlreadyExists, http.StatusConflict, handler.Logger)
+		httperror.WriteErrorResponse(w, dockm.ErrTeamAlreadyExists, http.StatusConflict, handler.Logger)
 		return
 	}
 
-	team = &portainer.Team{
+	team = &dockm.Team{
 		Name: req.Name,
 	}
 
@@ -113,7 +113,7 @@ func (handler *TeamHandler) handleGetTeam(w http.ResponseWriter, r *http.Request
 		httperror.WriteErrorResponse(w, err, http.StatusBadRequest, handler.Logger)
 		return
 	}
-	teamID := portainer.TeamID(tid)
+	teamID := dockm.TeamID(tid)
 
 	securityContext, err := security.RetrieveRestrictedRequestContext(r)
 	if err != nil {
@@ -122,12 +122,12 @@ func (handler *TeamHandler) handleGetTeam(w http.ResponseWriter, r *http.Request
 	}
 
 	if !security.AuthorizedTeamManagement(teamID, securityContext) {
-		httperror.WriteErrorResponse(w, portainer.ErrResourceAccessDenied, http.StatusForbidden, handler.Logger)
+		httperror.WriteErrorResponse(w, dockm.ErrResourceAccessDenied, http.StatusForbidden, handler.Logger)
 		return
 	}
 
 	team, err := handler.TeamService.Team(teamID)
-	if err == portainer.ErrTeamNotFound {
+	if err == dockm.ErrTeamNotFound {
 		httperror.WriteErrorResponse(w, err, http.StatusNotFound, handler.Logger)
 		return
 	} else if err != nil {
@@ -161,8 +161,8 @@ func (handler *TeamHandler) handlePutTeam(w http.ResponseWriter, r *http.Request
 		return
 	}
 
-	team, err := handler.TeamService.Team(portainer.TeamID(teamID))
-	if err == portainer.ErrTeamNotFound {
+	team, err := handler.TeamService.Team(dockm.TeamID(teamID))
+	if err == dockm.ErrTeamNotFound {
 		httperror.WriteErrorResponse(w, err, http.StatusNotFound, handler.Logger)
 		return
 	} else if err != nil {
@@ -196,9 +196,9 @@ func (handler *TeamHandler) handleDeleteTeam(w http.ResponseWriter, r *http.Requ
 		return
 	}
 
-	_, err = handler.TeamService.Team(portainer.TeamID(teamID))
+	_, err = handler.TeamService.Team(dockm.TeamID(teamID))
 
-	if err == portainer.ErrTeamNotFound {
+	if err == dockm.ErrTeamNotFound {
 		httperror.WriteErrorResponse(w, err, http.StatusNotFound, handler.Logger)
 		return
 	} else if err != nil {
@@ -206,13 +206,13 @@ func (handler *TeamHandler) handleDeleteTeam(w http.ResponseWriter, r *http.Requ
 		return
 	}
 
-	err = handler.TeamService.DeleteTeam(portainer.TeamID(teamID))
+	err = handler.TeamService.DeleteTeam(dockm.TeamID(teamID))
 	if err != nil {
 		httperror.WriteErrorResponse(w, err, http.StatusInternalServerError, handler.Logger)
 		return
 	}
 
-	err = handler.TeamMembershipService.DeleteTeamMembershipByTeamID(portainer.TeamID(teamID))
+	err = handler.TeamMembershipService.DeleteTeamMembershipByTeamID(dockm.TeamID(teamID))
 	if err != nil {
 		httperror.WriteErrorResponse(w, err, http.StatusInternalServerError, handler.Logger)
 		return
@@ -229,7 +229,7 @@ func (handler *TeamHandler) handleGetMemberships(w http.ResponseWriter, r *http.
 		httperror.WriteErrorResponse(w, err, http.StatusBadRequest, handler.Logger)
 		return
 	}
-	teamID := portainer.TeamID(tid)
+	teamID := dockm.TeamID(tid)
 
 	securityContext, err := security.RetrieveRestrictedRequestContext(r)
 	if err != nil {
@@ -238,7 +238,7 @@ func (handler *TeamHandler) handleGetMemberships(w http.ResponseWriter, r *http.
 	}
 
 	if !security.AuthorizedTeamManagement(teamID, securityContext) {
-		httperror.WriteErrorResponse(w, portainer.ErrResourceAccessDenied, http.StatusForbidden, handler.Logger)
+		httperror.WriteErrorResponse(w, dockm.ErrResourceAccessDenied, http.StatusForbidden, handler.Logger)
 		return
 	}
 

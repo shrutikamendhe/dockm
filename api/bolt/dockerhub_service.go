@@ -1,8 +1,8 @@
 package bolt
 
 import (
-	"github.com/portainer/portainer"
-	"github.com/portainer/portainer/bolt/internal"
+	"github.com/shrutikamendhe/dockm/api"
+	"github.com/shrutikamendhe/dockm/api/bolt/internal"
 
 	"github.com/boltdb/bolt"
 )
@@ -17,13 +17,13 @@ const (
 )
 
 // DockerHub returns the DockerHub object.
-func (service *DockerHubService) DockerHub() (*portainer.DockerHub, error) {
+func (service *DockerHubService) DockerHub() (*dockm.DockerHub, error) {
 	var data []byte
 	err := service.store.db.View(func(tx *bolt.Tx) error {
 		bucket := tx.Bucket([]byte(dockerhubBucketName))
 		value := bucket.Get([]byte(dbDockerHubKey))
 		if value == nil {
-			return portainer.ErrDockerHubNotFound
+			return dockm.ErrDockerHubNotFound
 		}
 
 		data = make([]byte, len(value))
@@ -34,7 +34,7 @@ func (service *DockerHubService) DockerHub() (*portainer.DockerHub, error) {
 		return nil, err
 	}
 
-	var dockerhub portainer.DockerHub
+	var dockerhub dockm.DockerHub
 	err = internal.UnmarshalDockerHub(data, &dockerhub)
 	if err != nil {
 		return nil, err
@@ -43,7 +43,7 @@ func (service *DockerHubService) DockerHub() (*portainer.DockerHub, error) {
 }
 
 // StoreDockerHub persists a DockerHub object.
-func (service *DockerHubService) StoreDockerHub(dockerhub *portainer.DockerHub) error {
+func (service *DockerHubService) StoreDockerHub(dockerhub *dockm.DockerHub) error {
 	return service.store.db.Update(func(tx *bolt.Tx) error {
 		bucket := tx.Bucket([]byte(dockerhubBucketName))
 

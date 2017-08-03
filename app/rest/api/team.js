@@ -1,4 +1,4 @@
-angular.module('portainer.rest')
+angular.module('dockm.rest')
 .factory('Teams', ['$resource', 'API_ENDPOINT_TEAMS', function TeamsFactory($resource, API_ENDPOINT_TEAMS) {
   'use strict';
   return $resource(API_ENDPOINT_TEAMS + '/:id/:entity/:entityId', {}, {

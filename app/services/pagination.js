@@ -1,4 +1,4 @@
-angular.module('portainer.services')
+angular.module('dockm.services')
 .factory('Pagination', ['LocalStorage', 'PAGINATION_MAX_ITEMS', function PaginationFactory(LocalStorage, PAGINATION_MAX_ITEMS) {
   'use strict';
   return {

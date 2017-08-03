@@ -7,20 +7,20 @@ import (
 	"os"
 
 	"github.com/gorilla/mux"
-	"github.com/portainer/portainer"
-	httperror "github.com/portainer/portainer/http/error"
-	"github.com/portainer/portainer/http/security"
+	"github.com/shrutikamendhe/dockm/api"
+	httperror "github.com/shrutikamendhe/dockm/api/http/error"
+	"github.com/shrutikamendhe/dockm/api/http/security"
 )
 
 // TemplatesHandler represents an HTTP API handler for managing templates.
 type TemplatesHandler struct {
 	*mux.Router
 	Logger          *log.Logger
-	SettingsService portainer.SettingsService
+	SettingsService dockm.SettingsService
 }
 
 const (
-	containerTemplatesURLLinuxServerIo = "http://tools.linuxserver.io/portainer.json"
+	containerTemplatesURLLinuxServerIo = "http://tools.linuxserver.io/dockm.json"
 )
 
 // NewTemplatesHandler returns a new instance of TemplatesHandler.

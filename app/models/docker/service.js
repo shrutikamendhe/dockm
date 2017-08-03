@@ -95,9 +95,9 @@ function ServiceViewModel(data, runningTasks, nodes) {
   this.Scale = false;
   this.EditName = false;
 
-  if (data.Portainer) {
-    if (data.Portainer.ResourceControl) {
-      this.ResourceControl = new ResourceControlViewModel(data.Portainer.ResourceControl);
+  if (data.dockm) {
+    if (data.dockm.ResourceControl) {
+      this.ResourceControl = new ResourceControlViewModel(data.dockm.ResourceControl);
     }
   }
 }

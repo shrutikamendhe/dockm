@@ -1,4 +1,4 @@
-angular.module('portainer.services')
+angular.module('dockm.services')
 .factory('VolumeService', ['$q', 'Volume', 'VolumeHelper', 'ResourceControlService', 'UserService', 'TeamService', function VolumeServiceFactory($q, Volume, VolumeHelper, ResourceControlService, UserService, TeamService) {
   'use strict';
   var service = {};

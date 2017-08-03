@@ -1,4 +1,4 @@
-angular.module('portainer.services')
+angular.module('dockm.services')
 .factory('FormValidator', [function FormValidatorFactory() {
   'use strict';
 

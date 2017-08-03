@@ -4,7 +4,7 @@ import (
 	"context"
 	"net/http"
 
-	"github.com/portainer/portainer"
+	"github.com/shrutikamendhe/dockm/api"
 )
 
 type (
@@ -17,18 +17,18 @@ const (
 )
 
 // storeTokenData stores a TokenData object inside the request context and returns the enhanced context.
-func storeTokenData(request *http.Request, tokenData *portainer.TokenData) context.Context {
+func storeTokenData(request *http.Request, tokenData *dockm.TokenData) context.Context {
 	return context.WithValue(request.Context(), contextAuthenticationKey, tokenData)
 }
 
 // RetrieveTokenData returns the TokenData object stored in the request context.
-func RetrieveTokenData(request *http.Request) (*portainer.TokenData, error) {
+func RetrieveTokenData(request *http.Request) (*dockm.TokenData, error) {
 	contextData := request.Context().Value(contextAuthenticationKey)
 	if contextData == nil {
-		return nil, portainer.ErrMissingContextData
+		return nil, dockm.ErrMissingContextData
 	}
 
-	tokenData := contextData.(*portainer.TokenData)
+	tokenData := contextData.(*dockm.TokenData)
 	return tokenData, nil
 }
 
@@ -42,7 +42,7 @@ func storeRestrictedRequestContext(request *http.Request, requestContext *Restri
 func RetrieveRestrictedRequestContext(request *http.Request) (*RestrictedRequestContext, error) {
 	contextData := request.Context().Value(contextRestrictedRequest)
 	if contextData == nil {
-		return nil, portainer.ErrMissingSecurityContext
+		return nil, dockm.ErrMissingSecurityContext
 	}
 
 	requestContext := contextData.(*RestrictedRequestContext)

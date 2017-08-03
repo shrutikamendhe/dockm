@@ -1,4 +1,4 @@
-angular.module('portainer.rest')
+angular.module('dockm.rest')
 .factory('Image', ['$resource', 'API_ENDPOINT_ENDPOINTS', 'EndpointProvider', 'HttpRequestHelper', function ImageFactory($resource, API_ENDPOINT_ENDPOINTS, EndpointProvider, HttpRequestHelper) {
   'use strict';
 

@@ -2,16 +2,16 @@ package bolt
 
 import (
 	"github.com/boltdb/bolt"
-	"github.com/portainer/portainer"
+	"github.com/shrutikamendhe/dockm/api"
 )
 
 func (m *Migrator) updateAdminUserToDBVersion1() error {
 	u, err := m.UserService.UserByUsername("admin")
 	if err == nil {
-		admin := &portainer.User{
+		admin := &dockm.User{
 			Username: "admin",
 			Password: u.Password,
-			Role:     portainer.AdministratorRole,
+			Role:     dockm.AdministratorRole,
 		}
 		err = m.UserService.CreateUser(admin)
 		if err != nil {
@@ -21,7 +21,7 @@ func (m *Migrator) updateAdminUserToDBVersion1() error {
 		if err != nil {
 			return err
 		}
-	} else if err != nil && err != portainer.ErrUserNotFound {
+	} else if err != nil && err != dockm.ErrUserNotFound {
 		return err
 	}
 	return nil

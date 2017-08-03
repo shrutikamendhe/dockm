@@ -1,4 +1,4 @@
-package portainer
+package dockm
 
 // General errors.
 const (

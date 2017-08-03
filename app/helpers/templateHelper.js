@@ -1,4 +1,4 @@
-angular.module('portainer.helpers')
+angular.module('dockm.helpers')
 .factory('TemplateHelper', ['$filter', function TemplateHelperFactory($filter) {
   'use strict';
   var helper = {};

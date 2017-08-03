@@ -4,9 +4,9 @@ import (
 	"encoding/json"
 
 	"github.com/asaskevich/govalidator"
-	"github.com/portainer/portainer"
-	httperror "github.com/portainer/portainer/http/error"
-	"github.com/portainer/portainer/http/security"
+	"github.com/shrutikamendhe/dockm/api"
+	httperror "github.com/shrutikamendhe/dockm/api/http/error"
+	"github.com/shrutikamendhe/dockm/api/http/security"
 
 	"log"
 	"net/http"
@@ -19,7 +19,7 @@ import (
 type DockerHubHandler struct {
 	*mux.Router
 	Logger           *log.Logger
-	DockerHubService portainer.DockerHubService
+	DockerHubService dockm.DockerHubService
 }
 
 // NewDockerHubHandler returns a new instance of DockerHubHandler.
@@ -62,7 +62,7 @@ func (handler *DockerHubHandler) handlePutDockerHub(w http.ResponseWriter, r *ht
 		return
 	}
 
-	dockerhub := &portainer.DockerHub{
+	dockerhub := &dockm.DockerHub{
 		Authentication: false,
 		Username:       "",
 		Password:       "",

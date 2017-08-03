@@ -1,4 +1,4 @@
-angular.module('portainer.services')
+angular.module('dockm.services')
 .factory('LineChart', [function LineChartFactory() {
   'use strict';
   return {

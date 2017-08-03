@@ -66,7 +66,7 @@ module.exports = function (grunt) {
     },
     clean: {
       all: ['<%= distdir %>/*'],
-      app: ['<%= distdir %>/*', '!<%= distdir %>/portainer*'],
+      app: ['<%= distdir %>/*', '!<%= distdir %>/dockm*'],
       tmpl: ['<%= distdir %>/templates'],
       tmp: ['<%= distdir %>/js/*', '!<%= distdir %>/js/app.*.js', '<%= distdir %>/css/*', '!<%= distdir %>/css/app.*.css']
     },
@@ -169,7 +169,7 @@ module.exports = function (grunt) {
     shell: {
       buildBinary: {
         command: function (p, a) {
-                   var binfile = 'dist/portainer-'+p+'-'+a;
+            var binfile = 'dist/dockm-' + p + '-' + a;
                    if (grunt.file.isFile( ( p === 'windows' ) ? binfile+'.exe' : binfile )) {
                      return 'echo \'BinaryExists\'';
                    } else {

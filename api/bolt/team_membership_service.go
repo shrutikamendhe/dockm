@@ -1,8 +1,8 @@
 package bolt
 
 import (
-	"github.com/portainer/portainer"
-	"github.com/portainer/portainer/bolt/internal"
+	"github.com/shrutikamendhe/dockm/api"
+	"github.com/shrutikamendhe/dockm/api/bolt/internal"
 
 	"github.com/boltdb/bolt"
 )
@@ -13,13 +13,13 @@ type TeamMembershipService struct {
 }
 
 // TeamMembership returns a TeamMembership object by ID
-func (service *TeamMembershipService) TeamMembership(ID portainer.TeamMembershipID) (*portainer.TeamMembership, error) {
+func (service *TeamMembershipService) TeamMembership(ID dockm.TeamMembershipID) (*dockm.TeamMembership, error) {
 	var data []byte
 	err := service.store.db.View(func(tx *bolt.Tx) error {
 		bucket := tx.Bucket([]byte(teamMembershipBucketName))
 		value := bucket.Get(internal.Itob(int(ID)))
 		if value == nil {
-			return portainer.ErrTeamMembershipNotFound
+			return dockm.ErrTeamMembershipNotFound
 		}
 
 		data = make([]byte, len(value))
@@ -30,7 +30,7 @@ func (service *TeamMembershipService) TeamMembership(ID portainer.TeamMembership
 		return nil, err
 	}
 
-	var membership portainer.TeamMembership
+	var membership dockm.TeamMembership
 	err = internal.UnmarshalTeamMembership(data, &membership)
 	if err != nil {
 		return nil, err
@@ -39,14 +39,14 @@ func (service *TeamMembershipService) TeamMembership(ID portainer.TeamMembership
 }
 
 // TeamMemberships return an array containing all the TeamMembership objects.
-func (service *TeamMembershipService) TeamMemberships() ([]portainer.TeamMembership, error) {
-	var memberships = make([]portainer.TeamMembership, 0)
+func (service *TeamMembershipService) TeamMemberships() ([]dockm.TeamMembership, error) {
+	var memberships = make([]dockm.TeamMembership, 0)
 	err := service.store.db.View(func(tx *bolt.Tx) error {
 		bucket := tx.Bucket([]byte(teamMembershipBucketName))
 
 		cursor := bucket.Cursor()
 		for k, v := cursor.First(); k != nil; k, v = cursor.Next() {
-			var membership portainer.TeamMembership
+			var membership dockm.TeamMembership
 			err := internal.UnmarshalTeamMembership(v, &membership)
 			if err != nil {
 				return err
@@ -64,14 +64,14 @@ func (service *TeamMembershipService) TeamMemberships() ([]portainer.TeamMembers
 }
 
 // TeamMembershipsByUserID return an array containing all the TeamMembership objects where the specified userID is present.
-func (service *TeamMembershipService) TeamMembershipsByUserID(userID portainer.UserID) ([]portainer.TeamMembership, error) {
-	var memberships = make([]portainer.TeamMembership, 0)
+func (service *TeamMembershipService) TeamMembershipsByUserID(userID dockm.UserID) ([]dockm.TeamMembership, error) {
+	var memberships = make([]dockm.TeamMembership, 0)
 	err := service.store.db.View(func(tx *bolt.Tx) error {
 		bucket := tx.Bucket([]byte(teamMembershipBucketName))
 
 		cursor := bucket.Cursor()
 		for k, v := cursor.First(); k != nil; k, v = cursor.Next() {
-			var membership portainer.TeamMembership
+			var membership dockm.TeamMembership
 			err := internal.UnmarshalTeamMembership(v, &membership)
 			if err != nil {
 				return err
@@ -91,14 +91,14 @@ func (service *TeamMembershipService) TeamMembershipsByUserID(userID portainer.U
 }
 
 // TeamMembershipsByTeamID return an array containing all the TeamMembership objects where the specified teamID is present.
-func (service *TeamMembershipService) TeamMembershipsByTeamID(teamID portainer.TeamID) ([]portainer.TeamMembership, error) {
-	var memberships = make([]portainer.TeamMembership, 0)
+func (service *TeamMembershipService) TeamMembershipsByTeamID(teamID dockm.TeamID) ([]dockm.TeamMembership, error) {
+	var memberships = make([]dockm.TeamMembership, 0)
 	err := service.store.db.View(func(tx *bolt.Tx) error {
 		bucket := tx.Bucket([]byte(teamMembershipBucketName))
 
 		cursor := bucket.Cursor()
 		for k, v := cursor.First(); k != nil; k, v = cursor.Next() {
-			var membership portainer.TeamMembership
+			var membership dockm.TeamMembership
 			err := internal.UnmarshalTeamMembership(v, &membership)
 			if err != nil {
 				return err
@@ -118,7 +118,7 @@ func (service *TeamMembershipService) TeamMembershipsByTeamID(teamID portainer.T
 }
 
 // UpdateTeamMembership saves a TeamMembership object.
-func (service *TeamMembershipService) UpdateTeamMembership(ID portainer.TeamMembershipID, membership *portainer.TeamMembership) error {
+func (service *TeamMembershipService) UpdateTeamMembership(ID dockm.TeamMembershipID, membership *dockm.TeamMembership) error {
 	data, err := internal.MarshalTeamMembership(membership)
 	if err != nil {
 		return err
@@ -136,12 +136,12 @@ func (service *TeamMembershipService) UpdateTeamMembership(ID portainer.TeamMemb
 }
 
 // CreateTeamMembership creates a new TeamMembership object.
-func (service *TeamMembershipService) CreateTeamMembership(membership *portainer.TeamMembership) error {
+func (service *TeamMembershipService) CreateTeamMembership(membership *dockm.TeamMembership) error {
 	return service.store.db.Update(func(tx *bolt.Tx) error {
 		bucket := tx.Bucket([]byte(teamMembershipBucketName))
 
 		id, _ := bucket.NextSequence()
-		membership.ID = portainer.TeamMembershipID(id)
+		membership.ID = dockm.TeamMembershipID(id)
 
 		data, err := internal.MarshalTeamMembership(membership)
 		if err != nil {
@@ -157,7 +157,7 @@ func (service *TeamMembershipService) CreateTeamMembership(membership *portainer
 }
 
 // DeleteTeamMembership deletes a TeamMembership object.
-func (service *TeamMembershipService) DeleteTeamMembership(ID portainer.TeamMembershipID) error {
+func (service *TeamMembershipService) DeleteTeamMembership(ID dockm.TeamMembershipID) error {
 	return service.store.db.Update(func(tx *bolt.Tx) error {
 		bucket := tx.Bucket([]byte(teamMembershipBucketName))
 		err := bucket.Delete(internal.Itob(int(ID)))
@@ -169,13 +169,13 @@ func (service *TeamMembershipService) DeleteTeamMembership(ID portainer.TeamMemb
 }
 
 // DeleteTeamMembershipByUserID deletes all the TeamMembership object associated to a UserID.
-func (service *TeamMembershipService) DeleteTeamMembershipByUserID(userID portainer.UserID) error {
+func (service *TeamMembershipService) DeleteTeamMembershipByUserID(userID dockm.UserID) error {
 	return service.store.db.Update(func(tx *bolt.Tx) error {
 		bucket := tx.Bucket([]byte(teamMembershipBucketName))
 
 		cursor := bucket.Cursor()
 		for k, v := cursor.First(); k != nil; k, v = cursor.Next() {
-			var membership portainer.TeamMembership
+			var membership dockm.TeamMembership
 			err := internal.UnmarshalTeamMembership(v, &membership)
 			if err != nil {
 				return err
@@ -193,13 +193,13 @@ func (service *TeamMembershipService) DeleteTeamMembershipByUserID(userID portai
 }
 
 // DeleteTeamMembershipByTeamID deletes all the TeamMembership object associated to a TeamID.
-func (service *TeamMembershipService) DeleteTeamMembershipByTeamID(teamID portainer.TeamID) error {
+func (service *TeamMembershipService) DeleteTeamMembershipByTeamID(teamID dockm.TeamID) error {
 	return service.store.db.Update(func(tx *bolt.Tx) error {
 		bucket := tx.Bucket([]byte(teamMembershipBucketName))
 
 		cursor := bucket.Cursor()
 		for k, v := cursor.First(); k != nil; k, v = cursor.Next() {
-			var membership portainer.TeamMembership
+			var membership dockm.TeamMembership
 			err := internal.UnmarshalTeamMembership(v, &membership)
 			if err != nil {
 				return err

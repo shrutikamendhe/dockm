@@ -1,16 +1,16 @@
 {
-  "name": "portainer",
+  "name": "dockm",
   "version": "1.13.6",
-  "homepage": "https://github.com/portainer/portainer",
+  "homepage": "https://github.com/shrutikamendhe/dockm",
   "authors": [
-    "Anthony Lapenna <anthony.lapenna at gmail dot com>"
+    "Click2Cloud Inc"
   ],
   "description": "A web interface for the Docker Remote API.",
   "keywords": [
     "docker",
     "ui",
     "api",
-    "portainer",
+    "dockm",
     "uifordocker",
     "dockerui",
     "swarm"

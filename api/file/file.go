@@ -3,7 +3,7 @@ package file
 import (
 	"bytes"
 
-	"github.com/portainer/portainer"
+	"github.com/shrutikamendhe/dockm/api"
 
 	"io"
 	"os"
@@ -40,7 +40,7 @@ func NewService(dataStorePath, fileStorePath string) (*Service, error) {
 
 	// Checking if a mount directory exists is broken with Go on Windows.
 	// This will need to be reviewed after the issue has been fixed in Go.
-	// See: https://github.com/portainer/portainer/issues/474
+	// See: https://github.com/click2cloud/dockm/issues/474
 	// err := createDirectoryIfNotExist(dataStorePath, 0755)
 	// if err != nil {
 	// 	return nil, err
@@ -101,7 +101,7 @@ func (service *Service) StoreComposeFile(name, composeFileContent string) (strin
 }
 
 // StoreTLSFile creates a subfolder in the TLSStorePath and stores a new file with the content from r.
-func (service *Service) StoreTLSFile(endpointID portainer.EndpointID, fileType portainer.TLSFileType, r io.Reader) error {
+func (service *Service) StoreTLSFile(endpointID dockm.EndpointID, fileType dockm.TLSFileType, r io.Reader) error {
 	ID := strconv.Itoa(int(endpointID))
 	endpointStorePath := path.Join(TLSStorePath, ID)
 	err := service.createDirectoryInStoreIfNotExist(endpointStorePath)
@@ -111,14 +111,14 @@ func (service *Service) StoreTLSFile(endpointID portainer.EndpointID, fileType p
 
 	var fileName string
 	switch fileType {
-	case portainer.TLSFileCA:
+	case dockm.TLSFileCA:
 		fileName = TLSCACertFile
-	case portainer.TLSFileCert:
+	case dockm.TLSFileCert:
 		fileName = TLSCertFile
-	case portainer.TLSFileKey:
+	case dockm.TLSFileKey:
 		fileName = TLSKeyFile
 	default:
-		return portainer.ErrUndefinedTLSFileType
+		return dockm.ErrUndefinedTLSFileType
 	}
 
 	tlsFilePath := path.Join(endpointStorePath, fileName)
@@ -130,17 +130,17 @@ func (service *Service) StoreTLSFile(endpointID portainer.EndpointID, fileType p
 }
 
 // GetPathForTLSFile returns the absolute path to a specific TLS file for an endpoint.
-func (service *Service) GetPathForTLSFile(endpointID portainer.EndpointID, fileType portainer.TLSFileType) (string, error) {
+func (service *Service) GetPathForTLSFile(endpointID dockm.EndpointID, fileType dockm.TLSFileType) (string, error) {
 	var fileName string
 	switch fileType {
-	case portainer.TLSFileCA:
+	case dockm.TLSFileCA:
 		fileName = TLSCACertFile
-	case portainer.TLSFileCert:
+	case dockm.TLSFileCert:
 		fileName = TLSCertFile
-	case portainer.TLSFileKey:
+	case dockm.TLSFileKey:
 		fileName = TLSKeyFile
 	default:
-		return "", portainer.ErrUndefinedTLSFileType
+		return "", dockm.ErrUndefinedTLSFileType
 	}
 	ID := strconv.Itoa(int(endpointID))
 	return path.Join(service.fileStorePath, TLSStorePath, ID, fileName), nil
@@ -156,7 +156,7 @@ func (service *Service) DeleteStackFiles(projectPath string) error {
 }
 
 // DeleteTLSFiles deletes a folder containing the TLS files for an endpoint.
-func (service *Service) DeleteTLSFiles(endpointID portainer.EndpointID) error {
+func (service *Service) DeleteTLSFiles(endpointID dockm.EndpointID) error {
 	ID := strconv.Itoa(int(endpointID))
 	endpointPath := path.Join(service.fileStorePath, TLSStorePath, ID)
 	err := os.RemoveAll(endpointPath)

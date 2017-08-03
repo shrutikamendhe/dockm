@@ -1,4 +1,4 @@
-angular.module('portainer.helpers')
+angular.module('dockm.helpers')
 .factory('UserHelper', [function UserHelperFactory() {
   'use strict';
   var helper = {};

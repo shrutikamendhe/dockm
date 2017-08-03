@@ -1,10 +1,10 @@
 package proxy
 
-import "github.com/portainer/portainer"
+import "github.com/shrutikamendhe/dockm/api"
 
 // decorateVolumeList loops through all volumes and will decorate any volume with an existing resource control.
 // Volume object schema reference: https://docs.docker.com/engine/api/v1.28/#operation/VolumeList
-func decorateVolumeList(volumeData []interface{}, resourceControls []portainer.ResourceControl) ([]interface{}, error) {
+func decorateVolumeList(volumeData []interface{}, resourceControls []dockm.ResourceControl) ([]interface{}, error) {
 	decoratedVolumeData := make([]interface{}, 0)
 
 	for _, volume := range volumeData {
@@ -28,7 +28,7 @@ func decorateVolumeList(volumeData []interface{}, resourceControls []portainer.R
 // decorateContainerList loops through all containers and will decorate any container with an existing resource control.
 // Check is based on the container ID and optional Swarm service ID.
 // Container object schema reference: https://docs.docker.com/engine/api/v1.28/#operation/ContainerList
-func decorateContainerList(containerData []interface{}, resourceControls []portainer.ResourceControl) ([]interface{}, error) {
+func decorateContainerList(containerData []interface{}, resourceControls []dockm.ResourceControl) ([]interface{}, error) {
 	decoratedContainerData := make([]interface{}, 0)
 
 	for _, container := range containerData {
@@ -61,7 +61,7 @@ func decorateContainerList(containerData []interface{}, resourceControls []porta
 
 // decorateServiceList loops through all services and will decorate any service with an existing resource control.
 // Service object schema reference: https://docs.docker.com/engine/api/v1.28/#operation/ServiceList
-func decorateServiceList(serviceData []interface{}, resourceControls []portainer.ResourceControl) ([]interface{}, error) {
+func decorateServiceList(serviceData []interface{}, resourceControls []dockm.ResourceControl) ([]interface{}, error) {
 	decoratedServiceData := make([]interface{}, 0)
 
 	for _, service := range serviceData {
@@ -82,9 +82,9 @@ func decorateServiceList(serviceData []interface{}, resourceControls []portainer
 	return decoratedServiceData, nil
 }
 
-func decorateObject(object map[string]interface{}, resourceControl *portainer.ResourceControl) map[string]interface{} {
+func decorateObject(object map[string]interface{}, resourceControl *dockm.ResourceControl) map[string]interface{} {
 	metadata := make(map[string]interface{})
 	metadata["ResourceControl"] = resourceControl
-	object["Portainer"] = metadata
+	object["DockM"] = metadata
 	return object
 }

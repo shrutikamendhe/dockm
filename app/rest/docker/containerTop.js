@@ -1,4 +1,4 @@
-angular.module('portainer.rest')
+angular.module('dockm.rest')
 .factory('ContainerTop', ['$http', 'API_ENDPOINT_ENDPOINTS', 'EndpointProvider', function ($http, API_ENDPOINT_ENDPOINTS, EndpointProvider) {
   'use strict';
   return {

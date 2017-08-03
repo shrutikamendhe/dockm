@@ -1,4 +1,4 @@
-angular.module('portainer.services')
+angular.module('dockm.services')
 .factory('ImageService', ['$q', 'Image', 'ImageHelper', 'RegistryService', 'HttpRequestHelper', 'SystemService', function ImageServiceFactory($q, Image, ImageHelper, RegistryService, HttpRequestHelper, SystemService) {
   'use strict';
   var service = {};

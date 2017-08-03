@@ -1,4 +1,4 @@
-angular.module('portainer')
+angular.module('dockm')
 .controller('porStackV2ServiceDetails', ['$state', 'Pagination', 'StackService', 'Notifications',
 function ($state, Pagination, StackService, Notifications) {
   var ctrl = this;

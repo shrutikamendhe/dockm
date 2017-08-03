@@ -1,8 +1,8 @@
-angular.module('portainer.filters', []);
-angular.module('portainer.rest', ['ngResource']);
-angular.module('portainer.services', []);
-angular.module('portainer.helpers', []);
-angular.module('portainer', [
+angular.module('dockm.filters', []);
+angular.module('dockm.rest', ['ngResource']);
+angular.module('dockm.services', []);
+angular.module('dockm.helpers', []);
+angular.module('dockm', [
   'ui.bootstrap',
   'ui.router',
   'isteven-multi-select',
@@ -13,11 +13,11 @@ angular.module('portainer', [
   'LocalStorageModule',
   'angular-jwt',
   'angular-google-analytics',
-  'portainer.templates',
-  'portainer.filters',
-  'portainer.rest',
-  'portainer.helpers',
-  'portainer.services',
+  'dockm.templates',
+  'dockm.filters',
+  'dockm.rest',
+  'dockm.helpers',
+  'dockm.services',
   'auth',
   'dashboard',
   'container',
@@ -77,7 +77,7 @@ angular.module('portainer', [
     }
 
     localStorageServiceProvider
-    .setPrefix('portainer');
+    .setPrefix('dockm');
 
     jwtOptionsProvider.config({
       tokenGetter: ['LocalStorage', function(LocalStorage) {

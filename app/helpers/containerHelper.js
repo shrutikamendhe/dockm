@@ -1,4 +1,4 @@
-angular.module('portainer.helpers')
+angular.module('dockm.helpers')
 .factory('ContainerHelper', [function ContainerHelperFactory() {
   'use strict';
   var helper = {};

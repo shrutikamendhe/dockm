@@ -1,4 +1,4 @@
-angular.module('portainer.rest')
+angular.module('dockm.rest')
 .factory('Registries', ['$resource', 'API_ENDPOINT_REGISTRIES', function RegistriesFactory($resource, API_ENDPOINT_REGISTRIES) {
   'use strict';
   return $resource(API_ENDPOINT_REGISTRIES + '/:id/:action', {}, {

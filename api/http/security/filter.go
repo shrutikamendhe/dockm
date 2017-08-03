@@ -1,14 +1,14 @@
 package security
 
-import "github.com/portainer/portainer"
+import "github.com/shrutikamendhe/dockm/api"
 
 // FilterUserTeams filters teams based on user role.
 // non-administrator users only have access to team they are member of.
-func FilterUserTeams(teams []portainer.Team, context *RestrictedRequestContext) []portainer.Team {
+func FilterUserTeams(teams []dockm.Team, context *RestrictedRequestContext) []dockm.Team {
 	filteredTeams := teams
 
 	if !context.IsAdmin {
-		filteredTeams = make([]portainer.Team, 0)
+		filteredTeams = make([]dockm.Team, 0)
 		for _, membership := range context.UserMemberships {
 			for _, team := range teams {
 				if team.ID == membership.TeamID {
@@ -24,14 +24,14 @@ func FilterUserTeams(teams []portainer.Team, context *RestrictedRequestContext) 
 
 // FilterLeaderTeams filters teams based on user role.
 // Team leaders only have access to team they lead.
-func FilterLeaderTeams(teams []portainer.Team, context *RestrictedRequestContext) []portainer.Team {
+func FilterLeaderTeams(teams []dockm.Team, context *RestrictedRequestContext) []dockm.Team {
 	filteredTeams := teams
 
 	if context.IsTeamLeader {
-		filteredTeams = make([]portainer.Team, 0)
+		filteredTeams = make([]dockm.Team, 0)
 		for _, membership := range context.UserMemberships {
 			for _, team := range teams {
-				if team.ID == membership.TeamID && membership.Role == portainer.TeamLeader {
+				if team.ID == membership.TeamID && membership.Role == dockm.TeamLeader {
 					filteredTeams = append(filteredTeams, team)
 					break
 				}
@@ -44,14 +44,14 @@ func FilterLeaderTeams(teams []portainer.Team, context *RestrictedRequestContext
 
 // FilterUsers filters users based on user role.
 // Non-administrator users only have access to non-administrator users.
-func FilterUsers(users []portainer.User, context *RestrictedRequestContext) []portainer.User {
+func FilterUsers(users []dockm.User, context *RestrictedRequestContext) []dockm.User {
 	filteredUsers := users
 
 	if !context.IsAdmin {
-		filteredUsers = make([]portainer.User, 0)
+		filteredUsers = make([]dockm.User, 0)
 
 		for _, user := range users {
-			if user.Role != portainer.AdministratorRole {
+			if user.Role != dockm.AdministratorRole {
 				filteredUsers = append(filteredUsers, user)
 			}
 		}
@@ -62,11 +62,11 @@ func FilterUsers(users []portainer.User, context *RestrictedRequestContext) []po
 
 // FilterRegistries filters registries based on user role and team memberships.
 // Non administrator users only have access to authorized endpoints.
-func FilterRegistries(registries []portainer.Registry, context *RestrictedRequestContext) ([]portainer.Registry, error) {
+func FilterRegistries(registries []dockm.Registry, context *RestrictedRequestContext) ([]dockm.Registry, error) {
 
 	filteredRegistries := registries
 	if !context.IsAdmin {
-		filteredRegistries = make([]portainer.Registry, 0)
+		filteredRegistries = make([]dockm.Registry, 0)
 
 		for _, registry := range registries {
 			if isRegistryAccessAuthorized(&registry, context.UserID, context.UserMemberships) {
@@ -80,11 +80,11 @@ func FilterRegistries(registries []portainer.Registry, context *RestrictedReques
 
 // FilterEndpoints filters endpoints based on user role and team memberships.
 // Non administrator users only have access to authorized endpoints.
-func FilterEndpoints(endpoints []portainer.Endpoint, context *RestrictedRequestContext) ([]portainer.Endpoint, error) {
+func FilterEndpoints(endpoints []dockm.Endpoint, context *RestrictedRequestContext) ([]dockm.Endpoint, error) {
 	filteredEndpoints := endpoints
 
 	if !context.IsAdmin {
-		filteredEndpoints = make([]portainer.Endpoint, 0)
+		filteredEndpoints = make([]dockm.Endpoint, 0)
 
 		for _, endpoint := range endpoints {
 			if isEndpointAccessAuthorized(&endpoint, context.UserID, context.UserMemberships) {
@@ -96,7 +96,7 @@ func FilterEndpoints(endpoints []portainer.Endpoint, context *RestrictedRequestC
 	return filteredEndpoints, nil
 }
 
-func isRegistryAccessAuthorized(registry *portainer.Registry, userID portainer.UserID, memberships []portainer.TeamMembership) bool {
+func isRegistryAccessAuthorized(registry *dockm.Registry, userID dockm.UserID, memberships []dockm.TeamMembership) bool {
 	for _, authorizedUserID := range registry.AuthorizedUsers {
 		if authorizedUserID == userID {
 			return true
@@ -112,7 +112,7 @@ func isRegistryAccessAuthorized(registry *portainer.Registry, userID portainer.U
 	return false
 }
 
-func isEndpointAccessAuthorized(endpoint *portainer.Endpoint, userID portainer.UserID, memberships []portainer.TeamMembership) bool {
+func isEndpointAccessAuthorized(endpoint *dockm.Endpoint, userID dockm.UserID, memberships []dockm.TeamMembership) bool {
 	for _, authorizedUserID := range endpoint.AuthorizedUsers {
 		if authorizedUserID == userID {
 			return true

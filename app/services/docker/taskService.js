@@ -1,4 +1,4 @@
-angular.module('portainer.services')
+angular.module('dockm.services')
 .factory('TaskService', ['$q', 'Task', function TaskServiceFactory($q, Task) {
   'use strict';
   var service = {};

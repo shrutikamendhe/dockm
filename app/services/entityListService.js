@@ -1,4 +1,4 @@
-angular.module('portainer.services')
+angular.module('dockm.services')
 .factory('EntityListService', [function EntityListServiceFactory() {
   'use strict';
   return {

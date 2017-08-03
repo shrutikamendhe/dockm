@@ -1,4 +1,4 @@
-angular.module('portainer.helpers')
+angular.module('dockm.helpers')
 .factory('InfoHelper', [function InfoHelperFactory() {
   'use strict';
   return {

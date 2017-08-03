@@ -1,4 +1,4 @@
-angular.module('portainer.services')
+angular.module('dockm.services')
 .factory('FileUploadService', ['$q', 'Upload', function FileUploadFactory($q, Upload) {
   'use strict';
   function uploadFile(url, file) {

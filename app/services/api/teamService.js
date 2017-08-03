@@ -1,4 +1,4 @@
-angular.module('portainer.services')
+angular.module('dockm.services')
 .factory('TeamService', ['$q', 'Teams', 'TeamMembershipService', function TeamServiceFactory($q, Teams, TeamMembershipService) {
   'use strict';
   var service = {};

@@ -1,8 +1,8 @@
 package bolt
 
 import (
-	"github.com/portainer/portainer"
-	"github.com/portainer/portainer/bolt/internal"
+	"github.com/shrutikamendhe/dockm/api"
+	"github.com/shrutikamendhe/dockm/api/bolt/internal"
 
 	"github.com/boltdb/bolt"
 )
@@ -13,13 +13,13 @@ type TeamService struct {
 }
 
 // Team returns a Team by ID
-func (service *TeamService) Team(ID portainer.TeamID) (*portainer.Team, error) {
+func (service *TeamService) Team(ID dockm.TeamID) (*dockm.Team, error) {
 	var data []byte
 	err := service.store.db.View(func(tx *bolt.Tx) error {
 		bucket := tx.Bucket([]byte(teamBucketName))
 		value := bucket.Get(internal.Itob(int(ID)))
 		if value == nil {
-			return portainer.ErrTeamNotFound
+			return dockm.ErrTeamNotFound
 		}
 
 		data = make([]byte, len(value))
@@ -30,7 +30,7 @@ func (service *TeamService) Team(ID portainer.TeamID) (*portainer.Team, error) {
 		return nil, err
 	}
 
-	var team portainer.Team
+	var team dockm.Team
 	err = internal.UnmarshalTeam(data, &team)
 	if err != nil {
 		return nil, err
@@ -39,14 +39,14 @@ func (service *TeamService) Team(ID portainer.TeamID) (*portainer.Team, error) {
 }
 
 // TeamByName returns a team by name.
-func (service *TeamService) TeamByName(name string) (*portainer.Team, error) {
-	var team *portainer.Team
+func (service *TeamService) TeamByName(name string) (*dockm.Team, error) {
+	var team *dockm.Team
 
 	err := service.store.db.View(func(tx *bolt.Tx) error {
 		bucket := tx.Bucket([]byte(teamBucketName))
 		cursor := bucket.Cursor()
 		for k, v := cursor.First(); k != nil; k, v = cursor.Next() {
-			var t portainer.Team
+			var t dockm.Team
 			err := internal.UnmarshalTeam(v, &t)
 			if err != nil {
 				return err
@@ -57,7 +57,7 @@ func (service *TeamService) TeamByName(name string) (*portainer.Team, error) {
 		}
 
 		if team == nil {
-			return portainer.ErrTeamNotFound
+			return dockm.ErrTeamNotFound
 		}
 		return nil
 	})
@@ -68,14 +68,14 @@ func (service *TeamService) TeamByName(name string) (*portainer.Team, error) {
 }
 
 // Teams return an array containing all the teams.
-func (service *TeamService) Teams() ([]portainer.Team, error) {
-	var teams = make([]portainer.Team, 0)
+func (service *TeamService) Teams() ([]dockm.Team, error) {
+	var teams = make([]dockm.Team, 0)
 	err := service.store.db.View(func(tx *bolt.Tx) error {
 		bucket := tx.Bucket([]byte(teamBucketName))
 
 		cursor := bucket.Cursor()
 		for k, v := cursor.First(); k != nil; k, v = cursor.Next() {
-			var team portainer.Team
+			var team dockm.Team
 			err := internal.UnmarshalTeam(v, &team)
 			if err != nil {
 				return err
@@ -93,7 +93,7 @@ func (service *TeamService) Teams() ([]portainer.Team, error) {
 }
 
 // UpdateTeam saves a Team.
-func (service *TeamService) UpdateTeam(ID portainer.TeamID, team *portainer.Team) error {
+func (service *TeamService) UpdateTeam(ID dockm.TeamID, team *dockm.Team) error {
 	data, err := internal.MarshalTeam(team)
 	if err != nil {
 		return err
@@ -111,12 +111,12 @@ func (service *TeamService) UpdateTeam(ID portainer.TeamID, team *portainer.Team
 }
 
 // CreateTeam creates a new Team.
-func (service *TeamService) CreateTeam(team *portainer.Team) error {
+func (service *TeamService) CreateTeam(team *dockm.Team) error {
 	return service.store.db.Update(func(tx *bolt.Tx) error {
 		bucket := tx.Bucket([]byte(teamBucketName))
 
 		id, _ := bucket.NextSequence()
-		team.ID = portainer.TeamID(id)
+		team.ID = dockm.TeamID(id)
 
 		data, err := internal.MarshalTeam(team)
 		if err != nil {
@@ -132,7 +132,7 @@ func (service *TeamService) CreateTeam(team *portainer.Team) error {
 }
 
 // DeleteTeam deletes a Team.
-func (service *TeamService) DeleteTeam(ID portainer.TeamID) error {
+func (service *TeamService) DeleteTeam(ID dockm.TeamID) error {
 	return service.store.db.Update(func(tx *bolt.Tx) error {
 		bucket := tx.Bucket([]byte(teamBucketName))
 		err := bucket.Delete(internal.Itob(int(ID)))

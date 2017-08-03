@@ -4,9 +4,9 @@ import (
 	"encoding/json"
 
 	"github.com/asaskevich/govalidator"
-	"github.com/portainer/portainer"
-	httperror "github.com/portainer/portainer/http/error"
-	"github.com/portainer/portainer/http/security"
+	"github.com/shrutikamendhe/dockm/api"
+	httperror "github.com/shrutikamendhe/dockm/api/http/error"
+	"github.com/shrutikamendhe/dockm/api/http/security"
 
 	"log"
 	"net/http"
@@ -19,7 +19,7 @@ import (
 type SettingsHandler struct {
 	*mux.Router
 	Logger          *log.Logger
-	SettingsService portainer.SettingsService
+	SettingsService dockm.SettingsService
 }
 
 // NewSettingsHandler returns a new instance of OldSettingsHandler.
@@ -62,7 +62,7 @@ func (handler *SettingsHandler) handlePutSettings(w http.ResponseWriter, r *http
 		return
 	}
 
-	settings := &portainer.Settings{
+	settings := &dockm.Settings{
 		TemplatesURL:                req.TemplatesURL,
 		LogoURL:                     req.LogoURL,
 		BlackListedLabels:           req.BlackListedLabels,
@@ -78,6 +78,6 @@ func (handler *SettingsHandler) handlePutSettings(w http.ResponseWriter, r *http
 type putSettingsRequest struct {
 	TemplatesURL                string           `valid:"required"`
 	LogoURL                     string           `valid:""`
-	BlackListedLabels           []portainer.Pair `valid:""`
+	BlackListedLabels           []dockm.Pair `valid:""`
 	DisplayExternalContributors bool             `valid:""`
 }

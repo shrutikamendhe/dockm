@@ -1,4 +1,4 @@
-angular.module('portainer.services')
+angular.module('dockm.services')
 .factory('HttpRequestHelper', [function HttpRequestHelper() {
   'use strict';
 

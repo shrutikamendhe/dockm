@@ -3,12 +3,12 @@ package proxy
 import (
 	"net/http"
 
-	"github.com/portainer/portainer"
+	"github.com/shrutikamendhe/dockm/api"
 )
 
 const (
-	// ErrDockerVolumeIdentifierNotFound defines an error raised when Portainer is unable to find a volume identifier
-	ErrDockerVolumeIdentifierNotFound = portainer.Error("Docker volume identifier not found")
+	// ErrDockerVolumeIdentifierNotFound defines an error raised when DockM is unable to find a volume identifier
+	ErrDockerVolumeIdentifierNotFound = dockm.Error("Docker volume identifier not found")
 	volumeIdentifier                  = "Name"
 )
 

@@ -3,12 +3,12 @@ package proxy
 import (
 	"net/http"
 
-	"github.com/portainer/portainer"
+	"github.com/shrutikamendhe/dockm/api"
 )
 
 const (
-	// ErrDockerContainerIdentifierNotFound defines an error raised when Portainer is unable to find a container identifier
-	ErrDockerContainerIdentifierNotFound = portainer.Error("Docker container identifier not found")
+	// ErrDockerContainerIdentifierNotFound defines an error raised when DockM is unable to find a container identifier
+	ErrDockerContainerIdentifierNotFound = dockm.Error("Docker container identifier not found")
 	containerIdentifier                  = "Id"
 	containerLabelForServiceIdentifier   = "com.docker.swarm.service.id"
 )

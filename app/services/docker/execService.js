@@ -1,4 +1,4 @@
-angular.module('portainer.services')
+angular.module('dockm.services')
 .factory('ExecService', ['$q', '$timeout', 'Exec', function ExecServiceFactory($q, $timeout, Exec) {
   'use strict';
   var service = {};

@@ -1,4 +1,4 @@
-angular.module('portainer.services')
+angular.module('dockm.services')
 .factory('EndpointProvider', ['LocalStorage', function EndpointProviderFactory(LocalStorage) {
   'use strict';
   var service = {};

@@ -3,10 +3,10 @@ package handler
 import (
 	"strconv"
 
-	"github.com/portainer/portainer"
-	httperror "github.com/portainer/portainer/http/error"
-	"github.com/portainer/portainer/http/proxy"
-	"github.com/portainer/portainer/http/security"
+	"github.com/shrutikamendhe/dockm/api"
+	httperror "github.com/shrutikamendhe/dockm/api/http/error"
+	"github.com/shrutikamendhe/dockm/api/http/proxy"
+	"github.com/shrutikamendhe/dockm/api/http/security"
 
 	"log"
 	"net/http"
@@ -19,8 +19,8 @@ import (
 type DockerHandler struct {
 	*mux.Router
 	Logger                *log.Logger
-	EndpointService       portainer.EndpointService
-	TeamMembershipService portainer.TeamMembershipService
+	EndpointService       dockm.EndpointService
+	TeamMembershipService dockm.TeamMembershipService
 	ProxyManager          *proxy.Manager
 }
 
@@ -35,7 +35,7 @@ func NewDockerHandler(bouncer *security.RequestBouncer) *DockerHandler {
 	return h
 }
 
-func (handler *DockerHandler) checkEndpointAccessControl(endpoint *portainer.Endpoint, userID portainer.UserID) bool {
+func (handler *DockerHandler) checkEndpointAccessControl(endpoint *dockm.Endpoint, userID dockm.UserID) bool {
 	for _, authorizedUserID := range endpoint.AuthorizedUsers {
 		if authorizedUserID == userID {
 			return true
@@ -63,7 +63,7 @@ func (handler *DockerHandler) proxyRequestsToDockerAPI(w http.ResponseWriter, r 
 		return
 	}
 
-	endpointID := portainer.EndpointID(parsedID)
+	endpointID := dockm.EndpointID(parsedID)
 	endpoint, err := handler.EndpointService.Endpoint(endpointID)
 	if err != nil {
 		httperror.WriteErrorResponse(w, err, http.StatusInternalServerError, handler.Logger)
@@ -75,8 +75,8 @@ func (handler *DockerHandler) proxyRequestsToDockerAPI(w http.ResponseWriter, r 
 		httperror.WriteErrorResponse(w, err, http.StatusInternalServerError, handler.Logger)
 		return
 	}
-	if tokenData.Role != portainer.AdministratorRole && !handler.checkEndpointAccessControl(endpoint, tokenData.ID) {
-		httperror.WriteErrorResponse(w, portainer.ErrEndpointAccessDenied, http.StatusForbidden, handler.Logger)
+	if tokenData.Role != dockm.AdministratorRole && !handler.checkEndpointAccessControl(endpoint, tokenData.ID) {
+		httperror.WriteErrorResponse(w, dockm.ErrEndpointAccessDenied, http.StatusForbidden, handler.Logger)
 		return
 	}
 

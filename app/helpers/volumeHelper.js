@@ -1,4 +1,4 @@
-angular.module('portainer.helpers')
+angular.module('dockm.helpers')
 .factory('VolumeHelper', [function VolumeHelperFactory() {
   'use strict';
   var helper = {};

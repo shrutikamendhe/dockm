@@ -1,4 +1,4 @@
-angular.module('portainer.services')
+angular.module('dockm.services')
 .factory('DockerHubService', ['$q', 'DockerHub', function DockerHubServiceFactory($q, DockerHub) {
   'use strict';
   var service = {};

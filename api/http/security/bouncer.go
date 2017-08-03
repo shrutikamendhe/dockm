@@ -1,8 +1,8 @@
 package security
 
 import (
-	"github.com/portainer/portainer"
-	httperror "github.com/portainer/portainer/http/error"
+	"github.com/shrutikamendhe/dockm/api"
+	httperror "github.com/shrutikamendhe/dockm/api/http/error"
 
 	"net/http"
 	"strings"
@@ -11,8 +11,8 @@ import (
 type (
 	// RequestBouncer represents an entity that manages API request accesses
 	RequestBouncer struct {
-		jwtService            portainer.JWTService
-		teamMembershipService portainer.TeamMembershipService
+		jwtService            dockm.JWTService
+		teamMembershipService dockm.TeamMembershipService
 		authDisabled          bool
 	}
 
@@ -21,13 +21,13 @@ type (
 	RestrictedRequestContext struct {
 		IsAdmin         bool
 		IsTeamLeader    bool
-		UserID          portainer.UserID
-		UserMemberships []portainer.TeamMembership
+		UserID          dockm.UserID
+		UserMemberships []dockm.TeamMembership
 	}
 )
 
 // NewRequestBouncer initializes a new RequestBouncer
-func NewRequestBouncer(jwtService portainer.JWTService, teamMembershipService portainer.TeamMembershipService, authDisabled bool) *RequestBouncer {
+func NewRequestBouncer(jwtService dockm.JWTService, teamMembershipService dockm.TeamMembershipService, authDisabled bool) *RequestBouncer {
 	return &RequestBouncer{
 		jwtService:            jwtService,
 		teamMembershipService: teamMembershipService,
@@ -83,7 +83,7 @@ func (bouncer *RequestBouncer) mwUpgradeToRestrictedRequest(next http.Handler) h
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		tokenData, err := RetrieveTokenData(r)
 		if err != nil {
-			httperror.WriteErrorResponse(w, portainer.ErrResourceAccessDenied, http.StatusForbidden, nil)
+			httperror.WriteErrorResponse(w, dockm.ErrResourceAccessDenied, http.StatusForbidden, nil)
 			return
 		}
 
@@ -102,8 +102,8 @@ func (bouncer *RequestBouncer) mwUpgradeToRestrictedRequest(next http.Handler) h
 func mwCheckAdministratorRole(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		tokenData, err := RetrieveTokenData(r)
-		if err != nil || tokenData.Role != portainer.AdministratorRole {
-			httperror.WriteErrorResponse(w, portainer.ErrResourceAccessDenied, http.StatusForbidden, nil)
+		if err != nil || tokenData.Role != dockm.AdministratorRole {
+			httperror.WriteErrorResponse(w, dockm.ErrResourceAccessDenied, http.StatusForbidden, nil)
 			return
 		}
 
@@ -114,7 +114,7 @@ func mwCheckAdministratorRole(next http.Handler) http.Handler {
 // mwCheckAuthentication provides Authentication middleware for handlers
 func (bouncer *RequestBouncer) mwCheckAuthentication(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		var tokenData *portainer.TokenData
+		var tokenData *dockm.TokenData
 		if !bouncer.authDisabled {
 			var token string
 
@@ -126,7 +126,7 @@ func (bouncer *RequestBouncer) mwCheckAuthentication(next http.Handler) http.Han
 			}
 
 			if token == "" {
-				httperror.WriteErrorResponse(w, portainer.ErrUnauthorized, http.StatusUnauthorized, nil)
+				httperror.WriteErrorResponse(w, dockm.ErrUnauthorized, http.StatusUnauthorized, nil)
 				return
 			}
 
@@ -137,8 +137,8 @@ func (bouncer *RequestBouncer) mwCheckAuthentication(next http.Handler) http.Han
 				return
 			}
 		} else {
-			tokenData = &portainer.TokenData{
-				Role: portainer.AdministratorRole,
+			tokenData = &dockm.TokenData{
+				Role: dockm.AdministratorRole,
 			}
 		}
 
@@ -148,13 +148,13 @@ func (bouncer *RequestBouncer) mwCheckAuthentication(next http.Handler) http.Han
 	})
 }
 
-func (bouncer *RequestBouncer) newRestrictedContextRequest(userID portainer.UserID, userRole portainer.UserRole) (*RestrictedRequestContext, error) {
+func (bouncer *RequestBouncer) newRestrictedContextRequest(userID dockm.UserID, userRole dockm.UserRole) (*RestrictedRequestContext, error) {
 	requestContext := &RestrictedRequestContext{
 		IsAdmin: true,
 		UserID:  userID,
 	}
 
-	if userRole != portainer.AdministratorRole {
+	if userRole != dockm.AdministratorRole {
 		requestContext.IsAdmin = false
 		memberships, err := bouncer.teamMembershipService.TeamMembershipsByUserID(userID)
 		if err != nil {
@@ -163,7 +163,7 @@ func (bouncer *RequestBouncer) newRestrictedContextRequest(userID portainer.User
 
 		isTeamLeader := false
 		for _, membership := range memberships {
-			if membership.Role == portainer.TeamLeader {
+			if membership.Role == dockm.TeamLeader {
 				isTeamLeader = true
 			}
 		}

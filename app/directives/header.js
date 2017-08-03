@@ -1,5 +1,5 @@
 angular
-.module('portainer')
+.module('dockm')
 .directive('rdHeader', function rdHeader() {
   var directive = {
     scope: {

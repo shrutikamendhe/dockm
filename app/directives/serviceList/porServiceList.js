@@ -1,4 +1,4 @@
-angular.module('portainer')
+angular.module('dockm')
 .controller('porServiceListController', ['EndpointProvider', 'Pagination',
 function (EndpointProvider, Pagination) {
   var ctrl = this;

@@ -5,15 +5,15 @@ import (
 	"net/http/httputil"
 	"net/url"
 
-	"github.com/portainer/portainer"
-	"github.com/portainer/portainer/crypto"
+	"github.com/shrutikamendhe/dockm/api"
+	"github.com/shrutikamendhe/dockm/api/crypto"
 )
 
 // proxyFactory is a factory to create reverse proxies to Docker endpoints
 type proxyFactory struct {
-	ResourceControlService portainer.ResourceControlService
-	TeamMembershipService  portainer.TeamMembershipService
-	SettingsService        portainer.SettingsService
+	ResourceControlService dockm.ResourceControlService
+	TeamMembershipService  dockm.TeamMembershipService
+	SettingsService        dockm.SettingsService
 }
 
 func (factory *proxyFactory) newHTTPProxy(u *url.URL) http.Handler {
@@ -21,7 +21,7 @@ func (factory *proxyFactory) newHTTPProxy(u *url.URL) http.Handler {
 	return factory.createReverseProxy(u)
 }
 
-func (factory *proxyFactory) newHTTPSProxy(u *url.URL, endpoint *portainer.Endpoint) (http.Handler, error) {
+func (factory *proxyFactory) newHTTPSProxy(u *url.URL, endpoint *dockm.Endpoint) (http.Handler, error) {
 	u.Scheme = "https"
 	proxy := factory.createReverseProxy(u)
 	config, err := crypto.CreateTLSConfiguration(endpoint.TLSCACertPath, endpoint.TLSCertPath, endpoint.TLSKeyPath)

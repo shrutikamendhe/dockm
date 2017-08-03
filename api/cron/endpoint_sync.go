@@ -7,29 +7,29 @@ import (
 	"os"
 	"strings"
 
-	"github.com/portainer/portainer"
+	"github.com/shrutikamendhe/dockm/api"
 )
 
 type (
 	endpointSyncJob struct {
 		logger           *log.Logger
-		endpointService  portainer.EndpointService
+		endpointService  dockm.EndpointService
 		endpointFilePath string
 	}
 
 	synchronization struct {
-		endpointsToCreate []*portainer.Endpoint
-		endpointsToUpdate []*portainer.Endpoint
-		endpointsToDelete []*portainer.Endpoint
+		endpointsToCreate []*dockm.Endpoint
+		endpointsToUpdate []*dockm.Endpoint
+		endpointsToDelete []*dockm.Endpoint
 	}
 )
 
 const (
 	// ErrEmptyEndpointArray is an error raised when the external endpoint source array is empty.
-	ErrEmptyEndpointArray = portainer.Error("External endpoint source is empty")
+	ErrEmptyEndpointArray = dockm.Error("External endpoint source is empty")
 )
 
-func newEndpointSyncJob(endpointFilePath string, endpointService portainer.EndpointService) endpointSyncJob {
+func newEndpointSyncJob(endpointFilePath string, endpointService dockm.EndpointService) endpointSyncJob {
 	return endpointSyncJob{
 		logger:           log.New(os.Stderr, "", log.LstdFlags),
 		endpointService:  endpointService,
@@ -45,7 +45,7 @@ func endpointSyncError(err error, logger *log.Logger) bool {
 	return false
 }
 
-func isValidEndpoint(endpoint *portainer.Endpoint) bool {
+func isValidEndpoint(endpoint *dockm.Endpoint) bool {
 	if endpoint.Name != "" && endpoint.URL != "" {
 		if !strings.HasPrefix(endpoint.URL, "unix://") && !strings.HasPrefix(endpoint.URL, "tcp://") {
 			return false
@@ -55,7 +55,7 @@ func isValidEndpoint(endpoint *portainer.Endpoint) bool {
 	return false
 }
 
-func endpointExists(endpoint *portainer.Endpoint, endpoints []portainer.Endpoint) int {
+func endpointExists(endpoint *dockm.Endpoint, endpoints []dockm.Endpoint) int {
 	for idx, v := range endpoints {
 		if endpoint.Name == v.Name && isValidEndpoint(&v) {
 			return idx
@@ -64,8 +64,8 @@ func endpointExists(endpoint *portainer.Endpoint, endpoints []portainer.Endpoint
 	return -1
 }
 
-func mergeEndpointIfRequired(original, updated *portainer.Endpoint) *portainer.Endpoint {
-	var endpoint *portainer.Endpoint
+func mergeEndpointIfRequired(original, updated *dockm.Endpoint) *dockm.Endpoint {
+	var endpoint *dockm.Endpoint
 	if original.URL != updated.URL || original.TLS != updated.TLS ||
 		(updated.TLS && original.TLSCACertPath != updated.TLSCACertPath) ||
 		(updated.TLS && original.TLSCertPath != updated.TLSCertPath) ||
@@ -95,10 +95,10 @@ func (sync synchronization) requireSync() bool {
 }
 
 // TMP: endpointSyncJob method to access logger, should be generic
-func (job endpointSyncJob) prepareSyncData(storedEndpoints, fileEndpoints []portainer.Endpoint) *synchronization {
-	endpointsToCreate := make([]*portainer.Endpoint, 0)
-	endpointsToUpdate := make([]*portainer.Endpoint, 0)
-	endpointsToDelete := make([]*portainer.Endpoint, 0)
+func (job endpointSyncJob) prepareSyncData(storedEndpoints, fileEndpoints []dockm.Endpoint) *synchronization {
+	endpointsToCreate := make([]*dockm.Endpoint, 0)
+	endpointsToUpdate := make([]*dockm.Endpoint, 0)
+	endpointsToDelete := make([]*dockm.Endpoint, 0)
 
 	for idx := range storedEndpoints {
 		fidx := endpointExists(&storedEndpoints[idx], fileEndpoints)
@@ -141,7 +141,7 @@ func (job endpointSyncJob) Sync() error {
 		return err
 	}
 
-	var fileEndpoints []portainer.Endpoint
+	var fileEndpoints []dockm.Endpoint
 	err = json.Unmarshal(data, &fileEndpoints)
 	if endpointSyncError(err, job.logger) {
 		return err

@@ -1,8 +1,8 @@
 package bolt
 
 import (
-	"github.com/portainer/portainer"
-	"github.com/portainer/portainer/bolt/internal"
+	"github.com/shrutikamendhe/dockm/api"
+	"github.com/shrutikamendhe/dockm/api/bolt/internal"
 
 	"github.com/boltdb/bolt"
 )
@@ -13,13 +13,13 @@ type RegistryService struct {
 }
 
 // Registry returns an registry by ID.
-func (service *RegistryService) Registry(ID portainer.RegistryID) (*portainer.Registry, error) {
+func (service *RegistryService) Registry(ID dockm.RegistryID) (*dockm.Registry, error) {
 	var data []byte
 	err := service.store.db.View(func(tx *bolt.Tx) error {
 		bucket := tx.Bucket([]byte(registryBucketName))
 		value := bucket.Get(internal.Itob(int(ID)))
 		if value == nil {
-			return portainer.ErrRegistryNotFound
+			return dockm.ErrRegistryNotFound
 		}
 
 		data = make([]byte, len(value))
@@ -30,7 +30,7 @@ func (service *RegistryService) Registry(ID portainer.RegistryID) (*portainer.Re
 		return nil, err
 	}
 
-	var registry portainer.Registry
+	var registry dockm.Registry
 	err = internal.UnmarshalRegistry(data, &registry)
 	if err != nil {
 		return nil, err
@@ -39,14 +39,14 @@ func (service *RegistryService) Registry(ID portainer.RegistryID) (*portainer.Re
 }
 
 // Registries returns an array containing all the registries.
-func (service *RegistryService) Registries() ([]portainer.Registry, error) {
-	var registries = make([]portainer.Registry, 0)
+func (service *RegistryService) Registries() ([]dockm.Registry, error) {
+	var registries = make([]dockm.Registry, 0)
 	err := service.store.db.View(func(tx *bolt.Tx) error {
 		bucket := tx.Bucket([]byte(registryBucketName))
 
 		cursor := bucket.Cursor()
 		for k, v := cursor.First(); k != nil; k, v = cursor.Next() {
-			var registry portainer.Registry
+			var registry dockm.Registry
 			err := internal.UnmarshalRegistry(v, &registry)
 			if err != nil {
 				return err
@@ -64,12 +64,12 @@ func (service *RegistryService) Registries() ([]portainer.Registry, error) {
 }
 
 // CreateRegistry creates a new registry.
-func (service *RegistryService) CreateRegistry(registry *portainer.Registry) error {
+func (service *RegistryService) CreateRegistry(registry *dockm.Registry) error {
 	return service.store.db.Update(func(tx *bolt.Tx) error {
 		bucket := tx.Bucket([]byte(registryBucketName))
 
 		id, _ := bucket.NextSequence()
-		registry.ID = portainer.RegistryID(id)
+		registry.ID = dockm.RegistryID(id)
 
 		data, err := internal.MarshalRegistry(registry)
 		if err != nil {
@@ -85,7 +85,7 @@ func (service *RegistryService) CreateRegistry(registry *portainer.Registry) err
 }
 
 // UpdateRegistry updates an registry.
-func (service *RegistryService) UpdateRegistry(ID portainer.RegistryID, registry *portainer.Registry) error {
+func (service *RegistryService) UpdateRegistry(ID dockm.RegistryID, registry *dockm.Registry) error {
 	data, err := internal.MarshalRegistry(registry)
 	if err != nil {
 		return err
@@ -102,7 +102,7 @@ func (service *RegistryService) UpdateRegistry(ID portainer.RegistryID, registry
 }
 
 // DeleteRegistry deletes an registry.
-func (service *RegistryService) DeleteRegistry(ID portainer.RegistryID) error {
+func (service *RegistryService) DeleteRegistry(ID dockm.RegistryID) error {
 	return service.store.db.Update(func(tx *bolt.Tx) error {
 		bucket := tx.Bucket([]byte(registryBucketName))
 		err := bucket.Delete(internal.Itob(int(ID)))

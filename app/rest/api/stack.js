@@ -1,4 +1,4 @@
-angular.module('portainer.rest')
+angular.module('dockm.rest')
 .factory('Stack', ['$resource', 'EndpointProvider', 'API_ENDPOINT_ENDPOINTS', function StackFactory($resource, EndpointProvider, API_ENDPOINT_ENDPOINTS) {
   'use strict';
   return $resource(API_ENDPOINT_ENDPOINTS + '/:endpointId/stacks/:id/:action', {

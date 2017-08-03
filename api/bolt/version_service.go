@@ -3,7 +3,7 @@ package bolt
 import (
 	"strconv"
 
-	"github.com/portainer/portainer"
+	"github.com/shrutikamendhe/dockm/api"
 
 	"github.com/boltdb/bolt"
 )
@@ -24,7 +24,7 @@ func (service *VersionService) DBVersion() (int, error) {
 		bucket := tx.Bucket([]byte(versionBucketName))
 		value := bucket.Get([]byte(dBVersionKey))
 		if value == nil {
-			return portainer.ErrDBVersionNotFound
+			return dockm.ErrDBVersionNotFound
 		}
 
 		data = make([]byte, len(value))

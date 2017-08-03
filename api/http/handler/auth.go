@@ -1,7 +1,7 @@
 package handler
 
 import (
-	"github.com/portainer/portainer"
+	"github.com/shrutikamendhe/dockm/api"
 
 	"encoding/json"
 	"log"
@@ -10,8 +10,8 @@ import (
 
 	"github.com/asaskevich/govalidator"
 	"github.com/gorilla/mux"
-	httperror "github.com/portainer/portainer/http/error"
-	"github.com/portainer/portainer/http/security"
+	httperror "github.com/shrutikamendhe/dockm/api/http/error"
+	"github.com/shrutikamendhe/dockm/api/http/security"
 )
 
 // AuthHandler represents an HTTP API handler for managing authentication.
@@ -19,19 +19,19 @@ type AuthHandler struct {
 	*mux.Router
 	Logger        *log.Logger
 	authDisabled  bool
-	UserService   portainer.UserService
-	CryptoService portainer.CryptoService
-	JWTService    portainer.JWTService
+	UserService   dockm.UserService
+	CryptoService dockm.CryptoService
+	JWTService    dockm.JWTService
 }
 
 const (
 	// ErrInvalidCredentialsFormat is an error raised when credentials format is not valid
-	ErrInvalidCredentialsFormat = portainer.Error("Invalid credentials format")
+	ErrInvalidCredentialsFormat = dockm.Error("Invalid credentials format")
 	// ErrInvalidCredentials is an error raised when credentials for a user are invalid
-	ErrInvalidCredentials = portainer.Error("Invalid credentials")
+	ErrInvalidCredentials = dockm.Error("Invalid credentials")
 	// ErrAuthDisabled is an error raised when trying to access the authentication endpoints
 	// when the server has been started with the --no-auth flag
-	ErrAuthDisabled = portainer.Error("Authentication is disabled")
+	ErrAuthDisabled = dockm.Error("Authentication is disabled")
 )
 
 // NewAuthHandler returns a new instance of AuthHandler.
@@ -74,7 +74,7 @@ func (handler *AuthHandler) handlePostAuth(w http.ResponseWriter, r *http.Reques
 	var password = req.Password
 
 	u, err := handler.UserService.UserByUsername(username)
-	if err == portainer.ErrUserNotFound {
+	if err == dockm.ErrUserNotFound {
 		httperror.WriteErrorResponse(w, ErrInvalidCredentials, http.StatusBadRequest, handler.Logger)
 		return
 	} else if err != nil {
@@ -88,7 +88,7 @@ func (handler *AuthHandler) handlePostAuth(w http.ResponseWriter, r *http.Reques
 		return
 	}
 
-	tokenData := &portainer.TokenData{
+	tokenData := &dockm.TokenData{
 		ID:       u.ID,
 		Username: u.Username,
 		Role:     u.Role,

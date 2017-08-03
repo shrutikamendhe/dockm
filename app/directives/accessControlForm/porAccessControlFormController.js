@@ -1,4 +1,4 @@
-angular.module('portainer')
+angular.module('dockm')
 .controller('porAccessControlFormController', ['$q', 'UserService', 'Notifications', 'Authentication', 'ResourceControlService',
 function ($q, UserService, Notifications, Authentication, ResourceControlService) {
   var ctrl = this;

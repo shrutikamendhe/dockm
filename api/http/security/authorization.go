@@ -1,13 +1,13 @@
 package security
 
-import "github.com/portainer/portainer"
+import "github.com/shrutikamendhe/dockm/api"
 
 // AuthorizedResourceControlDeletion ensure that the user can delete a resource control object.
 // A non-administrator user cannot delete a resource control where:
 // * the AdministratorsOnly flag is set
 // * he is not one of the users in the user accesses
 // * he is not a member of any team within the team accesses
-func AuthorizedResourceControlDeletion(resourceControl *portainer.ResourceControl, context *RestrictedRequestContext) bool {
+func AuthorizedResourceControlDeletion(resourceControl *dockm.ResourceControl, context *RestrictedRequestContext) bool {
 	if context.IsAdmin {
 		return true
 	}
@@ -44,7 +44,7 @@ func AuthorizedResourceControlDeletion(resourceControl *portainer.ResourceContro
 // It reuses the creation restrictions and adds extra checks.
 // A non-administrator user cannot update a resource control where:
 // * he wants to put one or more user in the user accesses
-func AuthorizedResourceControlUpdate(resourceControl *portainer.ResourceControl, context *RestrictedRequestContext) bool {
+func AuthorizedResourceControlUpdate(resourceControl *dockm.ResourceControl, context *RestrictedRequestContext) bool {
 	userAccessesCount := len(resourceControl.UserAccesses)
 	if !context.IsAdmin && userAccessesCount > 0 {
 		return false
@@ -58,7 +58,7 @@ func AuthorizedResourceControlUpdate(resourceControl *portainer.ResourceControl,
 // * the AdministratorsOnly flag is set
 // * he wants to add more than one user in the user accesses
 // * he wants to add a team he is not a member of
-func AuthorizedResourceControlCreation(resourceControl *portainer.ResourceControl, context *RestrictedRequestContext) bool {
+func AuthorizedResourceControlCreation(resourceControl *dockm.ResourceControl, context *RestrictedRequestContext) bool {
 	if context.IsAdmin {
 		return true
 	}
@@ -99,13 +99,13 @@ func AuthorizedResourceControlCreation(resourceControl *portainer.ResourceContro
 
 // AuthorizedTeamManagement ensure that access to the management of the specified team is granted.
 // It will check if the user is either administrator or leader of that team.
-func AuthorizedTeamManagement(teamID portainer.TeamID, context *RestrictedRequestContext) bool {
+func AuthorizedTeamManagement(teamID dockm.TeamID, context *RestrictedRequestContext) bool {
 	if context.IsAdmin {
 		return true
 	}
 
 	for _, membership := range context.UserMemberships {
-		if membership.TeamID == teamID && membership.Role == portainer.TeamLeader {
+		if membership.TeamID == teamID && membership.Role == dockm.TeamLeader {
 			return true
 		}
 	}
@@ -115,7 +115,7 @@ func AuthorizedTeamManagement(teamID portainer.TeamID, context *RestrictedReques
 
 // AuthorizedUserManagement ensure that access to the management of the specified user is granted.
 // It will check if the user is either administrator or the owner of the user account.
-func AuthorizedUserManagement(userID portainer.UserID, context *RestrictedRequestContext) bool {
+func AuthorizedUserManagement(userID dockm.UserID, context *RestrictedRequestContext) bool {
 	if context.IsAdmin || context.UserID == userID {
 		return true
 	}

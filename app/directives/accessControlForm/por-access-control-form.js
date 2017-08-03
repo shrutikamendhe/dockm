@@ -1,4 +1,4 @@
-angular.module('portainer').component('porAccessControlForm', {
+angular.module('dockm').component('porAccessControlForm', {
   templateUrl: 'app/directives/accessControlForm/porAccessControlForm.html',
   controller: 'porAccessControlFormController',
   bindings: {

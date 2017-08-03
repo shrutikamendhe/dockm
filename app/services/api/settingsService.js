@@ -1,4 +1,4 @@
-angular.module('portainer.services')
+angular.module('dockm.services')
 .factory('SettingsService', ['$q', 'Settings', function SettingsServiceFactory($q, Settings) {
   'use strict';
   var service = {};

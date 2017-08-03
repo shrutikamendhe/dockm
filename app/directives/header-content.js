@@ -1,5 +1,5 @@
 angular
-.module('portainer')
+.module('dockm')
 .directive('rdHeaderContent', ['Authentication', function rdHeaderContent(Authentication) {
   var directive = {
     requires: '^rdHeader',

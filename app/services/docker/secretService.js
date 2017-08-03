@@ -1,4 +1,4 @@
-angular.module('portainer.services')
+angular.module('dockm.services')
 .factory('SecretService', ['$q', 'Secret', function SecretServiceFactory($q, Secret) {
   'use strict';
   var service = {};

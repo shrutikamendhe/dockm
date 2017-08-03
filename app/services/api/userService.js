@@ -1,4 +1,4 @@
-angular.module('portainer.services')
+angular.module('dockm.services')
 .factory('UserService', ['$q', 'Users', 'UserHelper', 'TeamMembershipService', function UserServiceFactory($q, Users, UserHelper, TeamMembershipService) {
   'use strict';
   var service = {};

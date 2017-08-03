@@ -4,9 +4,9 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/portainer/portainer"
-	httperror "github.com/portainer/portainer/http/error"
-	"github.com/portainer/portainer/http/security"
+	"github.com/shrutikamendhe/dockm/api"
+	httperror "github.com/shrutikamendhe/dockm/api/http/error"
+	"github.com/shrutikamendhe/dockm/api/http/security"
 
 	"encoding/json"
 	"log"
@@ -21,11 +21,11 @@ import (
 type UserHandler struct {
 	*mux.Router
 	Logger                 *log.Logger
-	UserService            portainer.UserService
-	TeamService            portainer.TeamService
-	TeamMembershipService  portainer.TeamMembershipService
-	ResourceControlService portainer.ResourceControlService
-	CryptoService          portainer.CryptoService
+	UserService            dockm.UserService
+	TeamService            dockm.TeamService
+	TeamMembershipService  dockm.TeamMembershipService
+	ResourceControlService dockm.ResourceControlService
+	CryptoService          dockm.CryptoService
 }
 
 // NewUserHandler returns a new instance of UserHandler.
@@ -79,44 +79,44 @@ func (handler *UserHandler) handlePostUsers(w http.ResponseWriter, r *http.Reque
 	}
 
 	if !securityContext.IsAdmin && !securityContext.IsTeamLeader {
-		httperror.WriteErrorResponse(w, portainer.ErrResourceAccessDenied, http.StatusForbidden, nil)
+		httperror.WriteErrorResponse(w, dockm.ErrResourceAccessDenied, http.StatusForbidden, nil)
 		return
 	}
 
 	if securityContext.IsTeamLeader && req.Role == 1 {
-		httperror.WriteErrorResponse(w, portainer.ErrResourceAccessDenied, http.StatusForbidden, nil)
+		httperror.WriteErrorResponse(w, dockm.ErrResourceAccessDenied, http.StatusForbidden, nil)
 		return
 	}
 
 	if strings.ContainsAny(req.Username, " ") {
-		httperror.WriteErrorResponse(w, portainer.ErrInvalidUsername, http.StatusBadRequest, handler.Logger)
+		httperror.WriteErrorResponse(w, dockm.ErrInvalidUsername, http.StatusBadRequest, handler.Logger)
 		return
 	}
 
-	var role portainer.UserRole
+	var role dockm.UserRole
 	if req.Role == 1 {
-		role = portainer.AdministratorRole
+		role = dockm.AdministratorRole
 	} else {
-		role = portainer.StandardUserRole
+		role = dockm.StandardUserRole
 	}
 
 	user, err := handler.UserService.UserByUsername(req.Username)
-	if err != nil && err != portainer.ErrUserNotFound {
+	if err != nil && err != dockm.ErrUserNotFound {
 		httperror.WriteErrorResponse(w, err, http.StatusInternalServerError, handler.Logger)
 		return
 	}
 	if user != nil {
-		httperror.WriteErrorResponse(w, portainer.ErrUserAlreadyExists, http.StatusConflict, handler.Logger)
+		httperror.WriteErrorResponse(w, dockm.ErrUserAlreadyExists, http.StatusConflict, handler.Logger)
 		return
 	}
 
-	user = &portainer.User{
+	user = &dockm.User{
 		Username: req.Username,
 		Role:     role,
 	}
 	user.Password, err = handler.CryptoService.Hash(req.Password)
 	if err != nil {
-		httperror.WriteErrorResponse(w, portainer.ErrCryptoHashFailure, http.StatusBadRequest, handler.Logger)
+		httperror.WriteErrorResponse(w, dockm.ErrCryptoHashFailure, http.StatusBadRequest, handler.Logger)
 		return
 	}
 
@@ -192,8 +192,8 @@ func (handler *UserHandler) handlePostUserPasswd(w http.ResponseWriter, r *http.
 
 	var password = req.Password
 
-	u, err := handler.UserService.User(portainer.UserID(userID))
-	if err == portainer.ErrUserNotFound {
+	u, err := handler.UserService.User(dockm.UserID(userID))
+	if err == dockm.ErrUserNotFound {
 		httperror.WriteErrorResponse(w, err, http.StatusNotFound, handler.Logger)
 		return
 	} else if err != nil {
@@ -229,8 +229,8 @@ func (handler *UserHandler) handleGetUser(w http.ResponseWriter, r *http.Request
 		return
 	}
 
-	user, err := handler.UserService.User(portainer.UserID(userID))
-	if err == portainer.ErrUserNotFound {
+	user, err := handler.UserService.User(dockm.UserID(userID))
+	if err == dockm.ErrUserNotFound {
 		httperror.WriteErrorResponse(w, err, http.StatusNotFound, handler.Logger)
 		return
 	} else if err != nil {
@@ -259,8 +259,8 @@ func (handler *UserHandler) handlePutUser(w http.ResponseWriter, r *http.Request
 		return
 	}
 
-	if tokenData.Role != portainer.AdministratorRole && tokenData.ID != portainer.UserID(userID) {
-		httperror.WriteErrorResponse(w, portainer.ErrUnauthorized, http.StatusForbidden, handler.Logger)
+	if tokenData.Role != dockm.AdministratorRole && tokenData.ID != dockm.UserID(userID) {
+		httperror.WriteErrorResponse(w, dockm.ErrUnauthorized, http.StatusForbidden, handler.Logger)
 		return
 	}
 
@@ -281,8 +281,8 @@ func (handler *UserHandler) handlePutUser(w http.ResponseWriter, r *http.Request
 		return
 	}
 
-	user, err := handler.UserService.User(portainer.UserID(userID))
-	if err == portainer.ErrUserNotFound {
+	user, err := handler.UserService.User(dockm.UserID(userID))
+	if err == dockm.ErrUserNotFound {
 		httperror.WriteErrorResponse(w, err, http.StatusNotFound, handler.Logger)
 		return
 	} else if err != nil {
@@ -293,20 +293,20 @@ func (handler *UserHandler) handlePutUser(w http.ResponseWriter, r *http.Request
 	if req.Password != "" {
 		user.Password, err = handler.CryptoService.Hash(req.Password)
 		if err != nil {
-			httperror.WriteErrorResponse(w, portainer.ErrCryptoHashFailure, http.StatusBadRequest, handler.Logger)
+			httperror.WriteErrorResponse(w, dockm.ErrCryptoHashFailure, http.StatusBadRequest, handler.Logger)
 			return
 		}
 	}
 
 	if req.Role != 0 {
-		if tokenData.Role != portainer.AdministratorRole {
-			httperror.WriteErrorResponse(w, portainer.ErrUnauthorized, http.StatusForbidden, handler.Logger)
+		if tokenData.Role != dockm.AdministratorRole {
+			httperror.WriteErrorResponse(w, dockm.ErrUnauthorized, http.StatusForbidden, handler.Logger)
 			return
 		}
 		if req.Role == 1 {
-			user.Role = portainer.AdministratorRole
+			user.Role = dockm.AdministratorRole
 		} else {
-			user.Role = portainer.StandardUserRole
+			user.Role = dockm.StandardUserRole
 		}
 	}
 
@@ -329,13 +329,13 @@ func (handler *UserHandler) handleGetAdminCheck(w http.ResponseWriter, r *http.R
 		return
 	}
 
-	users, err := handler.UserService.UsersByRole(portainer.AdministratorRole)
+	users, err := handler.UserService.UsersByRole(dockm.AdministratorRole)
 	if err != nil {
 		httperror.WriteErrorResponse(w, err, http.StatusInternalServerError, handler.Logger)
 		return
 	}
 	if len(users) == 0 {
-		httperror.WriteErrorResponse(w, portainer.ErrUserNotFound, http.StatusNotFound, handler.Logger)
+		httperror.WriteErrorResponse(w, dockm.ErrUserNotFound, http.StatusNotFound, handler.Logger)
 		return
 	}
 }
@@ -360,14 +360,14 @@ func (handler *UserHandler) handlePostAdminInit(w http.ResponseWriter, r *http.R
 	}
 
 	user, err := handler.UserService.UserByUsername("admin")
-	if err == portainer.ErrUserNotFound {
-		user := &portainer.User{
+	if err == dockm.ErrUserNotFound {
+		user := &dockm.User{
 			Username: "admin",
-			Role:     portainer.AdministratorRole,
+			Role:     dockm.AdministratorRole,
 		}
 		user.Password, err = handler.CryptoService.Hash(req.Password)
 		if err != nil {
-			httperror.WriteErrorResponse(w, portainer.ErrCryptoHashFailure, http.StatusBadRequest, handler.Logger)
+			httperror.WriteErrorResponse(w, dockm.ErrCryptoHashFailure, http.StatusBadRequest, handler.Logger)
 			return
 		}
 
@@ -381,7 +381,7 @@ func (handler *UserHandler) handlePostAdminInit(w http.ResponseWriter, r *http.R
 		return
 	}
 	if user != nil {
-		httperror.WriteErrorResponse(w, portainer.ErrAdminAlreadyInitialized, http.StatusForbidden, handler.Logger)
+		httperror.WriteErrorResponse(w, dockm.ErrAdminAlreadyInitialized, http.StatusForbidden, handler.Logger)
 		return
 	}
 }
@@ -401,9 +401,9 @@ func (handler *UserHandler) handleDeleteUser(w http.ResponseWriter, r *http.Requ
 		return
 	}
 
-	_, err = handler.UserService.User(portainer.UserID(userID))
+	_, err = handler.UserService.User(dockm.UserID(userID))
 
-	if err == portainer.ErrUserNotFound {
+	if err == dockm.ErrUserNotFound {
 		httperror.WriteErrorResponse(w, err, http.StatusNotFound, handler.Logger)
 		return
 	} else if err != nil {
@@ -411,13 +411,13 @@ func (handler *UserHandler) handleDeleteUser(w http.ResponseWriter, r *http.Requ
 		return
 	}
 
-	err = handler.UserService.DeleteUser(portainer.UserID(userID))
+	err = handler.UserService.DeleteUser(dockm.UserID(userID))
 	if err != nil {
 		httperror.WriteErrorResponse(w, err, http.StatusInternalServerError, handler.Logger)
 		return
 	}
 
-	err = handler.TeamMembershipService.DeleteTeamMembershipByUserID(portainer.UserID(userID))
+	err = handler.TeamMembershipService.DeleteTeamMembershipByUserID(dockm.UserID(userID))
 	if err != nil {
 		httperror.WriteErrorResponse(w, err, http.StatusInternalServerError, handler.Logger)
 		return
@@ -441,12 +441,12 @@ func (handler *UserHandler) handleGetMemberships(w http.ResponseWriter, r *http.
 		return
 	}
 
-	if tokenData.Role != portainer.AdministratorRole && tokenData.ID != portainer.UserID(userID) {
-		httperror.WriteErrorResponse(w, portainer.ErrUnauthorized, http.StatusForbidden, handler.Logger)
+	if tokenData.Role != dockm.AdministratorRole && tokenData.ID != dockm.UserID(userID) {
+		httperror.WriteErrorResponse(w, dockm.ErrUnauthorized, http.StatusForbidden, handler.Logger)
 		return
 	}
 
-	memberships, err := handler.TeamMembershipService.TeamMembershipsByUserID(portainer.UserID(userID))
+	memberships, err := handler.TeamMembershipService.TeamMembershipsByUserID(dockm.UserID(userID))
 	if err != nil {
 		httperror.WriteErrorResponse(w, err, http.StatusInternalServerError, handler.Logger)
 		return
@@ -465,7 +465,7 @@ func (handler *UserHandler) handleGetTeams(w http.ResponseWriter, r *http.Reques
 		httperror.WriteErrorResponse(w, err, http.StatusBadRequest, handler.Logger)
 		return
 	}
-	userID := portainer.UserID(uid)
+	userID := dockm.UserID(uid)
 
 	securityContext, err := security.RetrieveRestrictedRequestContext(r)
 	if err != nil {
@@ -474,7 +474,7 @@ func (handler *UserHandler) handleGetTeams(w http.ResponseWriter, r *http.Reques
 	}
 
 	if !security.AuthorizedUserManagement(userID, securityContext) {
-		httperror.WriteErrorResponse(w, portainer.ErrResourceAccessDenied, http.StatusForbidden, handler.Logger)
+		httperror.WriteErrorResponse(w, dockm.ErrResourceAccessDenied, http.StatusForbidden, handler.Logger)
 		return
 	}
 

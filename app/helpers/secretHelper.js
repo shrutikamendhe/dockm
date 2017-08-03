@@ -1,4 +1,4 @@
-angular.module('portainer.helpers')
+angular.module('dockm.helpers')
 .factory('SecretHelper', [function SecretHelperFactory() {
   'use strict';
   return {

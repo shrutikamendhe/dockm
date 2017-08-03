@@ -1,4 +1,4 @@
-angular.module('portainer')
+angular.module('dockm')
 .controller('porAccessControlPanelController', ['$q', '$state', 'UserService', 'ResourceControlService', 'Notifications', 'Authentication', 'ModalService', 'FormValidator',
 function ($q, $state, UserService, ResourceControlService, Notifications, Authentication, ModalService, FormValidator) {
 

@@ -5,9 +5,9 @@ import (
 	"strconv"
 
 	"github.com/asaskevich/govalidator"
-	"github.com/portainer/portainer"
-	httperror "github.com/portainer/portainer/http/error"
-	"github.com/portainer/portainer/http/security"
+	"github.com/shrutikamendhe/dockm/api"
+	httperror "github.com/shrutikamendhe/dockm/api/http/error"
+	"github.com/shrutikamendhe/dockm/api/http/security"
 
 	"log"
 	"net/http"
@@ -20,7 +20,7 @@ import (
 type ResourceHandler struct {
 	*mux.Router
 	Logger                 *log.Logger
-	ResourceControlService portainer.ResourceControlService
+	ResourceControlService dockm.ResourceControlService
 }
 
 // NewResourceHandler returns a new instance of ResourceHandler.
@@ -53,16 +53,16 @@ func (handler *ResourceHandler) handlePostResources(w http.ResponseWriter, r *ht
 		return
 	}
 
-	var resourceControlType portainer.ResourceControlType
+	var resourceControlType dockm.ResourceControlType
 	switch req.Type {
 	case "container":
-		resourceControlType = portainer.ContainerResourceControl
+		resourceControlType = dockm.ContainerResourceControl
 	case "service":
-		resourceControlType = portainer.ServiceResourceControl
+		resourceControlType = dockm.ServiceResourceControl
 	case "volume":
-		resourceControlType = portainer.VolumeResourceControl
+		resourceControlType = dockm.VolumeResourceControl
 	default:
-		httperror.WriteErrorResponse(w, portainer.ErrInvalidResourceControlType, http.StatusBadRequest, handler.Logger)
+		httperror.WriteErrorResponse(w, dockm.ErrInvalidResourceControlType, http.StatusBadRequest, handler.Logger)
 		return
 	}
 
@@ -72,34 +72,34 @@ func (handler *ResourceHandler) handlePostResources(w http.ResponseWriter, r *ht
 	}
 
 	rc, err := handler.ResourceControlService.ResourceControlByResourceID(req.ResourceID)
-	if err != nil && err != portainer.ErrResourceControlNotFound {
+	if err != nil && err != dockm.ErrResourceControlNotFound {
 		httperror.WriteErrorResponse(w, err, http.StatusInternalServerError, handler.Logger)
 		return
 	}
 	if rc != nil {
-		httperror.WriteErrorResponse(w, portainer.ErrResourceControlAlreadyExists, http.StatusConflict, handler.Logger)
+		httperror.WriteErrorResponse(w, dockm.ErrResourceControlAlreadyExists, http.StatusConflict, handler.Logger)
 		return
 	}
 
-	var userAccesses = make([]portainer.UserResourceAccess, 0)
+	var userAccesses = make([]dockm.UserResourceAccess, 0)
 	for _, v := range req.Users {
-		userAccess := portainer.UserResourceAccess{
-			UserID:      portainer.UserID(v),
-			AccessLevel: portainer.ReadWriteAccessLevel,
+		userAccess := dockm.UserResourceAccess{
+			UserID:      dockm.UserID(v),
+			AccessLevel: dockm.ReadWriteAccessLevel,
 		}
 		userAccesses = append(userAccesses, userAccess)
 	}
 
-	var teamAccesses = make([]portainer.TeamResourceAccess, 0)
+	var teamAccesses = make([]dockm.TeamResourceAccess, 0)
 	for _, v := range req.Teams {
-		teamAccess := portainer.TeamResourceAccess{
-			TeamID:      portainer.TeamID(v),
-			AccessLevel: portainer.ReadWriteAccessLevel,
+		teamAccess := dockm.TeamResourceAccess{
+			TeamID:      dockm.TeamID(v),
+			AccessLevel: dockm.ReadWriteAccessLevel,
 		}
 		teamAccesses = append(teamAccesses, teamAccess)
 	}
 
-	resourceControl := portainer.ResourceControl{
+	resourceControl := dockm.ResourceControl{
 		ResourceID:         req.ResourceID,
 		SubResourceIDs:     req.SubResourceIDs,
 		Type:               resourceControlType,
@@ -115,7 +115,7 @@ func (handler *ResourceHandler) handlePostResources(w http.ResponseWriter, r *ht
 	}
 
 	if !security.AuthorizedResourceControlCreation(&resourceControl, securityContext) {
-		httperror.WriteErrorResponse(w, portainer.ErrResourceAccessDenied, http.StatusForbidden, handler.Logger)
+		httperror.WriteErrorResponse(w, dockm.ErrResourceAccessDenied, http.StatusForbidden, handler.Logger)
 		return
 	}
 
@@ -160,9 +160,9 @@ func (handler *ResourceHandler) handlePutResources(w http.ResponseWriter, r *htt
 		return
 	}
 
-	resourceControl, err := handler.ResourceControlService.ResourceControl(portainer.ResourceControlID(resourceControlID))
+	resourceControl, err := handler.ResourceControlService.ResourceControl(dockm.ResourceControlID(resourceControlID))
 
-	if err == portainer.ErrResourceControlNotFound {
+	if err == dockm.ErrResourceControlNotFound {
 		httperror.WriteErrorResponse(w, err, http.StatusNotFound, handler.Logger)
 		return
 	} else if err != nil {
@@ -172,21 +172,21 @@ func (handler *ResourceHandler) handlePutResources(w http.ResponseWriter, r *htt
 
 	resourceControl.AdministratorsOnly = req.AdministratorsOnly
 
-	var userAccesses = make([]portainer.UserResourceAccess, 0)
+	var userAccesses = make([]dockm.UserResourceAccess, 0)
 	for _, v := range req.Users {
-		userAccess := portainer.UserResourceAccess{
-			UserID:      portainer.UserID(v),
-			AccessLevel: portainer.ReadWriteAccessLevel,
+		userAccess := dockm.UserResourceAccess{
+			UserID:      dockm.UserID(v),
+			AccessLevel: dockm.ReadWriteAccessLevel,
 		}
 		userAccesses = append(userAccesses, userAccess)
 	}
 	resourceControl.UserAccesses = userAccesses
 
-	var teamAccesses = make([]portainer.TeamResourceAccess, 0)
+	var teamAccesses = make([]dockm.TeamResourceAccess, 0)
 	for _, v := range req.Teams {
-		teamAccess := portainer.TeamResourceAccess{
-			TeamID:      portainer.TeamID(v),
-			AccessLevel: portainer.ReadWriteAccessLevel,
+		teamAccess := dockm.TeamResourceAccess{
+			TeamID:      dockm.TeamID(v),
+			AccessLevel: dockm.ReadWriteAccessLevel,
 		}
 		teamAccesses = append(teamAccesses, teamAccess)
 	}
@@ -199,7 +199,7 @@ func (handler *ResourceHandler) handlePutResources(w http.ResponseWriter, r *htt
 	}
 
 	if !security.AuthorizedResourceControlUpdate(resourceControl, securityContext) {
-		httperror.WriteErrorResponse(w, portainer.ErrResourceAccessDenied, http.StatusForbidden, handler.Logger)
+		httperror.WriteErrorResponse(w, dockm.ErrResourceAccessDenied, http.StatusForbidden, handler.Logger)
 		return
 	}
 
@@ -227,9 +227,9 @@ func (handler *ResourceHandler) handleDeleteResources(w http.ResponseWriter, r *
 		return
 	}
 
-	resourceControl, err := handler.ResourceControlService.ResourceControl(portainer.ResourceControlID(resourceControlID))
+	resourceControl, err := handler.ResourceControlService.ResourceControl(dockm.ResourceControlID(resourceControlID))
 
-	if err == portainer.ErrResourceControlNotFound {
+	if err == dockm.ErrResourceControlNotFound {
 		httperror.WriteErrorResponse(w, err, http.StatusNotFound, handler.Logger)
 		return
 	} else if err != nil {
@@ -244,11 +244,11 @@ func (handler *ResourceHandler) handleDeleteResources(w http.ResponseWriter, r *
 	}
 
 	if !security.AuthorizedResourceControlDeletion(resourceControl, securityContext) {
-		httperror.WriteErrorResponse(w, portainer.ErrResourceAccessDenied, http.StatusForbidden, handler.Logger)
+		httperror.WriteErrorResponse(w, dockm.ErrResourceAccessDenied, http.StatusForbidden, handler.Logger)
 		return
 	}
 
-	err = handler.ResourceControlService.DeleteResourceControl(portainer.ResourceControlID(resourceControlID))
+	err = handler.ResourceControlService.DeleteResourceControl(dockm.ResourceControlID(resourceControlID))
 	if err != nil {
 		httperror.WriteErrorResponse(w, err, http.StatusInternalServerError, handler.Logger)
 		return

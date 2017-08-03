@@ -1,10 +1,10 @@
 package handler
 
 import (
-	"github.com/portainer/portainer"
-	httperror "github.com/portainer/portainer/http/error"
-	"github.com/portainer/portainer/http/proxy"
-	"github.com/portainer/portainer/http/security"
+	"github.com/shrutikamendhe/dockm/api"
+	httperror "github.com/shrutikamendhe/dockm/api/http/error"
+	"github.com/shrutikamendhe/dockm/api/http/proxy"
+	"github.com/shrutikamendhe/dockm/api/http/security"
 
 	"encoding/json"
 	"log"
@@ -21,15 +21,15 @@ type EndpointHandler struct {
 	*mux.Router
 	Logger                      *log.Logger
 	authorizeEndpointManagement bool
-	EndpointService             portainer.EndpointService
-	FileService                 portainer.FileService
+	EndpointService             dockm.EndpointService
+	FileService                 dockm.FileService
 	ProxyManager                *proxy.Manager
 }
 
 const (
 	// ErrEndpointManagementDisabled is an error raised when trying to access the endpoints management endpoints
 	// when the server has been started with the --external-endpoints flag
-	ErrEndpointManagementDisabled = portainer.Error("Endpoint management is disabled")
+	ErrEndpointManagementDisabled = dockm.Error("Endpoint management is disabled")
 )
 
 // NewEndpointHandler returns a new instance of EndpointHandler.
@@ -97,13 +97,13 @@ func (handler *EndpointHandler) handlePostEndpoints(w http.ResponseWriter, r *ht
 		return
 	}
 
-	endpoint := &portainer.Endpoint{
+	endpoint := &dockm.Endpoint{
 		Name:            req.Name,
 		URL:             req.URL,
 		PublicURL:       req.PublicURL,
 		TLS:             req.TLS,
-		AuthorizedUsers: []portainer.UserID{},
-		AuthorizedTeams: []portainer.TeamID{},
+		AuthorizedUsers: []dockm.UserID{},
+		AuthorizedTeams: []dockm.TeamID{},
 	}
 
 	err = handler.EndpointService.CreateEndpoint(endpoint)
@@ -113,11 +113,11 @@ func (handler *EndpointHandler) handlePostEndpoints(w http.ResponseWriter, r *ht
 	}
 
 	if req.TLS {
-		caCertPath, _ := handler.FileService.GetPathForTLSFile(endpoint.ID, portainer.TLSFileCA)
+		caCertPath, _ := handler.FileService.GetPathForTLSFile(endpoint.ID, dockm.TLSFileCA)
 		endpoint.TLSCACertPath = caCertPath
-		certPath, _ := handler.FileService.GetPathForTLSFile(endpoint.ID, portainer.TLSFileCert)
+		certPath, _ := handler.FileService.GetPathForTLSFile(endpoint.ID, dockm.TLSFileCert)
 		endpoint.TLSCertPath = certPath
-		keyPath, _ := handler.FileService.GetPathForTLSFile(endpoint.ID, portainer.TLSFileKey)
+		keyPath, _ := handler.FileService.GetPathForTLSFile(endpoint.ID, dockm.TLSFileKey)
 		endpoint.TLSKeyPath = keyPath
 		err = handler.EndpointService.UpdateEndpoint(endpoint.ID, endpoint)
 		if err != nil {
@@ -151,8 +151,8 @@ func (handler *EndpointHandler) handleGetEndpoint(w http.ResponseWriter, r *http
 		return
 	}
 
-	endpoint, err := handler.EndpointService.Endpoint(portainer.EndpointID(endpointID))
-	if err == portainer.ErrEndpointNotFound {
+	endpoint, err := handler.EndpointService.Endpoint(dockm.EndpointID(endpointID))
+	if err == dockm.ErrEndpointNotFound {
 		httperror.WriteErrorResponse(w, err, http.StatusNotFound, handler.Logger)
 		return
 	} else if err != nil {
@@ -186,8 +186,8 @@ func (handler *EndpointHandler) handlePutEndpointAccess(w http.ResponseWriter, r
 		return
 	}
 
-	endpoint, err := handler.EndpointService.Endpoint(portainer.EndpointID(endpointID))
-	if err == portainer.ErrEndpointNotFound {
+	endpoint, err := handler.EndpointService.Endpoint(dockm.EndpointID(endpointID))
+	if err == dockm.ErrEndpointNotFound {
 		httperror.WriteErrorResponse(w, err, http.StatusNotFound, handler.Logger)
 		return
 	} else if err != nil {
@@ -196,17 +196,17 @@ func (handler *EndpointHandler) handlePutEndpointAccess(w http.ResponseWriter, r
 	}
 
 	if req.AuthorizedUsers != nil {
-		authorizedUserIDs := []portainer.UserID{}
+		authorizedUserIDs := []dockm.UserID{}
 		for _, value := range req.AuthorizedUsers {
-			authorizedUserIDs = append(authorizedUserIDs, portainer.UserID(value))
+			authorizedUserIDs = append(authorizedUserIDs, dockm.UserID(value))
 		}
 		endpoint.AuthorizedUsers = authorizedUserIDs
 	}
 
 	if req.AuthorizedTeams != nil {
-		authorizedTeamIDs := []portainer.TeamID{}
+		authorizedTeamIDs := []dockm.TeamID{}
 		for _, value := range req.AuthorizedTeams {
-			authorizedTeamIDs = append(authorizedTeamIDs, portainer.TeamID(value))
+			authorizedTeamIDs = append(authorizedTeamIDs, dockm.TeamID(value))
 		}
 		endpoint.AuthorizedTeams = authorizedTeamIDs
 	}
@@ -251,8 +251,8 @@ func (handler *EndpointHandler) handlePutEndpoint(w http.ResponseWriter, r *http
 		return
 	}
 
-	endpoint, err := handler.EndpointService.Endpoint(portainer.EndpointID(endpointID))
-	if err == portainer.ErrEndpointNotFound {
+	endpoint, err := handler.EndpointService.Endpoint(dockm.EndpointID(endpointID))
+	if err == dockm.ErrEndpointNotFound {
 		httperror.WriteErrorResponse(w, err, http.StatusNotFound, handler.Logger)
 		return
 	} else if err != nil {
@@ -274,11 +274,11 @@ func (handler *EndpointHandler) handlePutEndpoint(w http.ResponseWriter, r *http
 
 	if req.TLS {
 		endpoint.TLS = true
-		caCertPath, _ := handler.FileService.GetPathForTLSFile(endpoint.ID, portainer.TLSFileCA)
+		caCertPath, _ := handler.FileService.GetPathForTLSFile(endpoint.ID, dockm.TLSFileCA)
 		endpoint.TLSCACertPath = caCertPath
-		certPath, _ := handler.FileService.GetPathForTLSFile(endpoint.ID, portainer.TLSFileCert)
+		certPath, _ := handler.FileService.GetPathForTLSFile(endpoint.ID, dockm.TLSFileCert)
 		endpoint.TLSCertPath = certPath
-		keyPath, _ := handler.FileService.GetPathForTLSFile(endpoint.ID, portainer.TLSFileKey)
+		keyPath, _ := handler.FileService.GetPathForTLSFile(endpoint.ID, dockm.TLSFileKey)
 		endpoint.TLSKeyPath = keyPath
 	} else {
 		endpoint.TLS = false
@@ -328,9 +328,9 @@ func (handler *EndpointHandler) handleDeleteEndpoint(w http.ResponseWriter, r *h
 		return
 	}
 
-	endpoint, err := handler.EndpointService.Endpoint(portainer.EndpointID(endpointID))
+	endpoint, err := handler.EndpointService.Endpoint(dockm.EndpointID(endpointID))
 
-	if err == portainer.ErrEndpointNotFound {
+	if err == dockm.ErrEndpointNotFound {
 		httperror.WriteErrorResponse(w, err, http.StatusNotFound, handler.Logger)
 		return
 	} else if err != nil {
@@ -340,14 +340,14 @@ func (handler *EndpointHandler) handleDeleteEndpoint(w http.ResponseWriter, r *h
 
 	handler.ProxyManager.DeleteProxy(string(endpointID))
 
-	err = handler.EndpointService.DeleteEndpoint(portainer.EndpointID(endpointID))
+	err = handler.EndpointService.DeleteEndpoint(dockm.EndpointID(endpointID))
 	if err != nil {
 		httperror.WriteErrorResponse(w, err, http.StatusInternalServerError, handler.Logger)
 		return
 	}
 
 	if endpoint.TLS {
-		err = handler.FileService.DeleteTLSFiles(portainer.EndpointID(endpointID))
+		err = handler.FileService.DeleteTLSFiles(dockm.EndpointID(endpointID))
 		if err != nil {
 			httperror.WriteErrorResponse(w, err, http.StatusInternalServerError, handler.Logger)
 			return

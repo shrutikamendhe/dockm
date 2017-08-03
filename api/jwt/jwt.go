@@ -1,7 +1,7 @@
 package jwt
 
 import (
-	"github.com/portainer/portainer"
+	"github.com/shrutikamendhe/dockm/api"
 
 	"fmt"
 	"time"
@@ -26,7 +26,7 @@ type claims struct {
 func NewService() (*Service, error) {
 	secret := securecookie.GenerateRandomKey(32)
 	if secret == nil {
-		return nil, portainer.ErrSecretGeneration
+		return nil, dockm.ErrSecretGeneration
 	}
 	service := &Service{
 		secret,
@@ -35,7 +35,7 @@ func NewService() (*Service, error) {
 }
 
 // GenerateToken generates a new JWT token.
-func (service *Service) GenerateToken(data *portainer.TokenData) (string, error) {
+func (service *Service) GenerateToken(data *dockm.TokenData) (string, error) {
 	expireToken := time.Now().Add(time.Hour * 8).Unix()
 	cl := claims{
 		int(data.ID),
@@ -56,7 +56,7 @@ func (service *Service) GenerateToken(data *portainer.TokenData) (string, error)
 }
 
 // ParseAndVerifyToken parses a JWT token and verify its validity. It returns an error if token is invalid.
-func (service *Service) ParseAndVerifyToken(token string) (*portainer.TokenData, error) {
+func (service *Service) ParseAndVerifyToken(token string) (*dockm.TokenData, error) {
 	parsedToken, err := jwt.ParseWithClaims(token, &claims{}, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			msg := fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
@@ -66,14 +66,14 @@ func (service *Service) ParseAndVerifyToken(token string) (*portainer.TokenData,
 	})
 	if err == nil && parsedToken != nil {
 		if cl, ok := parsedToken.Claims.(*claims); ok && parsedToken.Valid {
-			tokenData := &portainer.TokenData{
-				ID:       portainer.UserID(cl.UserID),
+			tokenData := &dockm.TokenData{
+				ID:       dockm.UserID(cl.UserID),
 				Username: cl.Username,
-				Role:     portainer.UserRole(cl.Role),
+				Role:     dockm.UserRole(cl.Role),
 			}
 			return tokenData, nil
 		}
 	}
 
-	return nil, portainer.ErrInvalidJWTToken
+	return nil, dockm.ErrInvalidJWTToken
 }

@@ -5,9 +5,9 @@ import (
 	"strconv"
 
 	"github.com/asaskevich/govalidator"
-	"github.com/portainer/portainer"
-	httperror "github.com/portainer/portainer/http/error"
-	"github.com/portainer/portainer/http/security"
+	"github.com/shrutikamendhe/dockm/api"
+	httperror "github.com/shrutikamendhe/dockm/api/http/error"
+	"github.com/shrutikamendhe/dockm/api/http/security"
 
 	"log"
 	"net/http"
@@ -20,10 +20,10 @@ import (
 type StackHandler struct {
 	*mux.Router
 	Logger          *log.Logger
-	FileService     portainer.FileService
-	StackService    portainer.StackService
-	EndpointService portainer.EndpointService
-	StackManager    portainer.StackManager
+	FileService     dockm.FileService
+	StackService    dockm.StackService
+	EndpointService dockm.EndpointService
+	StackManager    dockm.StackManager
 }
 
 // NewStackHandler returns a new instance of StackHandler.
@@ -71,9 +71,9 @@ func (handler *StackHandler) handlePostStacks(w http.ResponseWriter, r *http.Req
 		return
 	}
 
-	stack := &portainer.Stack{
+	stack := &dockm.Stack{
 		Name:       req.Name,
-		EndpointID: portainer.EndpointID(endpointID),
+		EndpointID: dockm.EndpointID(endpointID),
 	}
 
 	projectPath, err := handler.FileService.StoreComposeFile(stack.Name, req.ComposeFileContent)
@@ -126,7 +126,7 @@ func (handler *StackHandler) handleGetStacks(w http.ResponseWriter, r *http.Requ
 		return
 	}
 
-	stacks, err := handler.StackService.StacksByEndpointID(portainer.EndpointID(endpointID))
+	stacks, err := handler.StackService.StacksByEndpointID(dockm.EndpointID(endpointID))
 	if err != nil {
 		httperror.WriteErrorResponse(w, err, http.StatusInternalServerError, handler.Logger)
 		return
@@ -159,8 +159,8 @@ func (handler *StackHandler) handleGetStack(w http.ResponseWriter, r *http.Reque
 		return
 	}
 
-	_, err = handler.EndpointService.Endpoint(portainer.EndpointID(endpointID))
-	if err == portainer.ErrEndpointNotFound {
+	_, err = handler.EndpointService.Endpoint(dockm.EndpointID(endpointID))
+	if err == dockm.ErrEndpointNotFound {
 		httperror.WriteErrorResponse(w, err, http.StatusNotFound, handler.Logger)
 		return
 	} else if err != nil {
@@ -168,8 +168,8 @@ func (handler *StackHandler) handleGetStack(w http.ResponseWriter, r *http.Reque
 		return
 	}
 
-	stack, err := handler.StackService.Stack(portainer.StackID(stackID))
-	if err == portainer.ErrStackNotFound {
+	stack, err := handler.StackService.Stack(dockm.StackID(stackID))
+	if err == dockm.ErrStackNotFound {
 		httperror.WriteErrorResponse(w, err, http.StatusNotFound, handler.Logger)
 		return
 	} else if err != nil {
@@ -197,8 +197,8 @@ func (handler *StackHandler) handleDeleteStack(w http.ResponseWriter, r *http.Re
 		return
 	}
 
-	_, err = handler.EndpointService.Endpoint(portainer.EndpointID(endpointID))
-	if err == portainer.ErrEndpointNotFound {
+	_, err = handler.EndpointService.Endpoint(dockm.EndpointID(endpointID))
+	if err == dockm.ErrEndpointNotFound {
 		httperror.WriteErrorResponse(w, err, http.StatusNotFound, handler.Logger)
 		return
 	} else if err != nil {
@@ -206,8 +206,8 @@ func (handler *StackHandler) handleDeleteStack(w http.ResponseWriter, r *http.Re
 		return
 	}
 
-	stack, err := handler.StackService.Stack(portainer.StackID(stackID))
-	if err == portainer.ErrStackNotFound {
+	stack, err := handler.StackService.Stack(dockm.StackID(stackID))
+	if err == dockm.ErrStackNotFound {
 		httperror.WriteErrorResponse(w, err, http.StatusNotFound, handler.Logger)
 		return
 	} else if err != nil {
@@ -215,7 +215,7 @@ func (handler *StackHandler) handleDeleteStack(w http.ResponseWriter, r *http.Re
 		return
 	}
 
-	err = handler.StackService.DeleteStack(portainer.StackID(stackID))
+	err = handler.StackService.DeleteStack(dockm.StackID(stackID))
 	if err != nil {
 		httperror.WriteErrorResponse(w, err, http.StatusInternalServerError, handler.Logger)
 		return
@@ -237,8 +237,8 @@ func (handler *StackHandler) handleStackOperationUp(w http.ResponseWriter, r *ht
 		return
 	}
 
-	endpoint, err := handler.EndpointService.Endpoint(portainer.EndpointID(endpointID))
-	if err == portainer.ErrEndpointNotFound {
+	endpoint, err := handler.EndpointService.Endpoint(dockm.EndpointID(endpointID))
+	if err == dockm.ErrEndpointNotFound {
 		httperror.WriteErrorResponse(w, err, http.StatusNotFound, handler.Logger)
 		return
 	} else if err != nil {
@@ -252,8 +252,8 @@ func (handler *StackHandler) handleStackOperationUp(w http.ResponseWriter, r *ht
 		return
 	}
 
-	stack, err := handler.StackService.Stack(portainer.StackID(stackID))
-	if err == portainer.ErrStackNotFound {
+	stack, err := handler.StackService.Stack(dockm.StackID(stackID))
+	if err == dockm.ErrStackNotFound {
 		httperror.WriteErrorResponse(w, err, http.StatusNotFound, handler.Logger)
 		return
 	} else if err != nil {
@@ -278,8 +278,8 @@ func (handler *StackHandler) handleStackOperationDown(w http.ResponseWriter, r *
 		return
 	}
 
-	endpoint, err := handler.EndpointService.Endpoint(portainer.EndpointID(endpointID))
-	if err == portainer.ErrEndpointNotFound {
+	endpoint, err := handler.EndpointService.Endpoint(dockm.EndpointID(endpointID))
+	if err == dockm.ErrEndpointNotFound {
 		httperror.WriteErrorResponse(w, err, http.StatusNotFound, handler.Logger)
 		return
 	} else if err != nil {
@@ -293,8 +293,8 @@ func (handler *StackHandler) handleStackOperationDown(w http.ResponseWriter, r *
 		return
 	}
 
-	stack, err := handler.StackService.Stack(portainer.StackID(stackID))
-	if err == portainer.ErrStackNotFound {
+	stack, err := handler.StackService.Stack(dockm.StackID(stackID))
+	if err == dockm.ErrStackNotFound {
 		httperror.WriteErrorResponse(w, err, http.StatusNotFound, handler.Logger)
 		return
 	} else if err != nil {
@@ -331,8 +331,8 @@ func (handler *StackHandler) handleStackOperationScale(w http.ResponseWriter, r 
 		return
 	}
 
-	endpoint, err := handler.EndpointService.Endpoint(portainer.EndpointID(endpointID))
-	if err == portainer.ErrEndpointNotFound {
+	endpoint, err := handler.EndpointService.Endpoint(dockm.EndpointID(endpointID))
+	if err == dockm.ErrEndpointNotFound {
 		httperror.WriteErrorResponse(w, err, http.StatusNotFound, handler.Logger)
 		return
 	} else if err != nil {
@@ -346,8 +346,8 @@ func (handler *StackHandler) handleStackOperationScale(w http.ResponseWriter, r 
 		return
 	}
 
-	stack, err := handler.StackService.Stack(portainer.StackID(stackID))
-	if err == portainer.ErrStackNotFound {
+	stack, err := handler.StackService.Stack(dockm.StackID(stackID))
+	if err == dockm.ErrStackNotFound {
 		httperror.WriteErrorResponse(w, err, http.StatusNotFound, handler.Logger)
 		return
 	} else if err != nil {

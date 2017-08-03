@@ -1,4 +1,4 @@
-angular.module('portainer.helpers')
+angular.module('dockm.helpers')
 .factory('ResourceControlHelper', [function ResourceControlHelperFactory() {
   'use strict';
   var helper = {};

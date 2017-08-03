@@ -1,4 +1,4 @@
-angular.module('portainer.rest')
+angular.module('dockm.rest')
 .factory('ResourceControl', ['$resource', 'API_ENDPOINT_RESOURCE_CONTROLS', function ResourceControlFactory($resource, API_ENDPOINT_RESOURCE_CONTROLS) {
   'use strict';
   return $resource(API_ENDPOINT_RESOURCE_CONTROLS + '/:id', {}, {

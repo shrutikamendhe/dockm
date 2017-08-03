@@ -3,9 +3,9 @@ package handler
 import (
 	"strconv"
 
-	"github.com/portainer/portainer"
-	httperror "github.com/portainer/portainer/http/error"
-	"github.com/portainer/portainer/http/security"
+	"github.com/shrutikamendhe/dockm/api"
+	httperror "github.com/shrutikamendhe/dockm/api/http/error"
+	"github.com/shrutikamendhe/dockm/api/http/security"
 
 	"encoding/json"
 	"log"
@@ -20,8 +20,8 @@ import (
 type TeamMembershipHandler struct {
 	*mux.Router
 	Logger                 *log.Logger
-	TeamMembershipService  portainer.TeamMembershipService
-	ResourceControlService portainer.ResourceControlService
+	TeamMembershipService  dockm.TeamMembershipService
+	ResourceControlService dockm.ResourceControlService
 }
 
 // NewTeamMembershipHandler returns a new instance of TeamMembershipHandler.
@@ -62,12 +62,12 @@ func (handler *TeamMembershipHandler) handlePostTeamMemberships(w http.ResponseW
 		return
 	}
 
-	userID := portainer.UserID(req.UserID)
-	teamID := portainer.TeamID(req.TeamID)
-	role := portainer.MembershipRole(req.Role)
+	userID := dockm.UserID(req.UserID)
+	teamID := dockm.TeamID(req.TeamID)
+	role := dockm.MembershipRole(req.Role)
 
 	if !security.AuthorizedTeamManagement(teamID, securityContext) {
-		httperror.WriteErrorResponse(w, portainer.ErrResourceAccessDenied, http.StatusForbidden, handler.Logger)
+		httperror.WriteErrorResponse(w, dockm.ErrResourceAccessDenied, http.StatusForbidden, handler.Logger)
 		return
 	}
 
@@ -79,13 +79,13 @@ func (handler *TeamMembershipHandler) handlePostTeamMemberships(w http.ResponseW
 	if len(memberships) > 0 {
 		for _, membership := range memberships {
 			if membership.UserID == userID && membership.TeamID == teamID {
-				httperror.WriteErrorResponse(w, portainer.ErrTeamMembershipAlreadyExists, http.StatusConflict, handler.Logger)
+				httperror.WriteErrorResponse(w, dockm.ErrTeamMembershipAlreadyExists, http.StatusConflict, handler.Logger)
 				return
 			}
 		}
 	}
 
-	membership := &portainer.TeamMembership{
+	membership := &dockm.TeamMembership{
 		UserID: userID,
 		TeamID: teamID,
 		Role:   role,
@@ -119,7 +119,7 @@ func (handler *TeamMembershipHandler) handleGetTeamsMemberships(w http.ResponseW
 	}
 
 	if !securityContext.IsAdmin && !securityContext.IsTeamLeader {
-		httperror.WriteErrorResponse(w, portainer.ErrResourceAccessDenied, http.StatusForbidden, handler.Logger)
+		httperror.WriteErrorResponse(w, dockm.ErrResourceAccessDenied, http.StatusForbidden, handler.Logger)
 		return
 	}
 
@@ -155,9 +155,9 @@ func (handler *TeamMembershipHandler) handlePutTeamMembership(w http.ResponseWri
 		return
 	}
 
-	userID := portainer.UserID(req.UserID)
-	teamID := portainer.TeamID(req.TeamID)
-	role := portainer.MembershipRole(req.Role)
+	userID := dockm.UserID(req.UserID)
+	teamID := dockm.TeamID(req.TeamID)
+	role := dockm.MembershipRole(req.Role)
 
 	securityContext, err := security.RetrieveRestrictedRequestContext(r)
 	if err != nil {
@@ -166,12 +166,12 @@ func (handler *TeamMembershipHandler) handlePutTeamMembership(w http.ResponseWri
 	}
 
 	if !security.AuthorizedTeamManagement(teamID, securityContext) {
-		httperror.WriteErrorResponse(w, portainer.ErrResourceAccessDenied, http.StatusForbidden, handler.Logger)
+		httperror.WriteErrorResponse(w, dockm.ErrResourceAccessDenied, http.StatusForbidden, handler.Logger)
 		return
 	}
 
-	membership, err := handler.TeamMembershipService.TeamMembership(portainer.TeamMembershipID(membershipID))
-	if err == portainer.ErrTeamMembershipNotFound {
+	membership, err := handler.TeamMembershipService.TeamMembership(dockm.TeamMembershipID(membershipID))
+	if err == dockm.ErrTeamMembershipNotFound {
 		httperror.WriteErrorResponse(w, err, http.StatusNotFound, handler.Logger)
 		return
 	} else if err != nil {
@@ -180,7 +180,7 @@ func (handler *TeamMembershipHandler) handlePutTeamMembership(w http.ResponseWri
 	}
 
 	if securityContext.IsTeamLeader && membership.Role != role {
-		httperror.WriteErrorResponse(w, portainer.ErrResourceAccessDenied, http.StatusForbidden, handler.Logger)
+		httperror.WriteErrorResponse(w, dockm.ErrResourceAccessDenied, http.StatusForbidden, handler.Logger)
 		return
 	}
 
@@ -212,8 +212,8 @@ func (handler *TeamMembershipHandler) handleDeleteTeamMembership(w http.Response
 		return
 	}
 
-	membership, err := handler.TeamMembershipService.TeamMembership(portainer.TeamMembershipID(membershipID))
-	if err == portainer.ErrTeamMembershipNotFound {
+	membership, err := handler.TeamMembershipService.TeamMembership(dockm.TeamMembershipID(membershipID))
+	if err == dockm.ErrTeamMembershipNotFound {
 		httperror.WriteErrorResponse(w, err, http.StatusNotFound, handler.Logger)
 		return
 	} else if err != nil {
@@ -228,11 +228,11 @@ func (handler *TeamMembershipHandler) handleDeleteTeamMembership(w http.Response
 	}
 
 	if !security.AuthorizedTeamManagement(membership.TeamID, securityContext) {
-		httperror.WriteErrorResponse(w, portainer.ErrResourceAccessDenied, http.StatusForbidden, handler.Logger)
+		httperror.WriteErrorResponse(w, dockm.ErrResourceAccessDenied, http.StatusForbidden, handler.Logger)
 		return
 	}
 
-	err = handler.TeamMembershipService.DeleteTeamMembership(portainer.TeamMembershipID(membershipID))
+	err = handler.TeamMembershipService.DeleteTeamMembership(dockm.TeamMembershipID(membershipID))
 	if err != nil {
 		httperror.WriteErrorResponse(w, err, http.StatusInternalServerError, handler.Logger)
 		return

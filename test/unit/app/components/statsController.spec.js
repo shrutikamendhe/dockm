@@ -1,7 +1,7 @@
 describe("StatsController", function () {
     var $scope, $httpBackend, $routeParams;
 
-    beforeEach(angular.mock.module('portainer'));
+    beforeEach(angular.mock.module('dockm'));
 
     beforeEach(inject(function (_$rootScope_, _$httpBackend_, $controller, _$routeParams_) {
         $scope = _$rootScope_.$new();

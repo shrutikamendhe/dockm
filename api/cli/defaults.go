@@ -13,7 +13,7 @@ const (
 	defaultTLSCertPath     = "/certs/cert.pem"
 	defaultTLSKeyPath      = "/certs/key.pem"
 	defaultSSL             = "false"
-	defaultSSLCertPath     = "/certs/portainer.crt"
-	defaultSSLKeyPath      = "/certs/portainer.key"
+	defaultSSLCertPath     = "/certs/dockm.crt"
+	defaultSSLKeyPath      = "/certs/dockm.key"
 	defaultSyncInterval    = "60s"
 )

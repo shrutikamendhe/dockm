@@ -1,5 +1,5 @@
 angular
-.module('portainer')
+.module('dockm')
 .directive('rdLoading', function rdLoading() {
   var directive = {
     restrict: 'AE',

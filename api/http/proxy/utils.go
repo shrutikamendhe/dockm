@@ -1,8 +1,8 @@
 package proxy
 
-import "github.com/portainer/portainer"
+import "github.com/shrutikamendhe/dockm/api"
 
-func getResourceControlByResourceID(resourceID string, resourceControls []portainer.ResourceControl) *portainer.ResourceControl {
+func getResourceControlByResourceID(resourceID string, resourceControls []dockm.ResourceControl) *dockm.ResourceControl {
 	for _, resourceControl := range resourceControls {
 		if resourceID == resourceControl.ResourceID {
 			return &resourceControl
@@ -16,7 +16,7 @@ func getResourceControlByResourceID(resourceID string, resourceControls []portai
 	return nil
 }
 
-func containerHasBlackListedLabel(containerLabels map[string]interface{}, labelBlackList []portainer.Pair) bool {
+func containerHasBlackListedLabel(containerLabels map[string]interface{}, labelBlackList []dockm.Pair) bool {
 	for key, value := range containerLabels {
 		labelName := key
 		labelValue := value.(string)

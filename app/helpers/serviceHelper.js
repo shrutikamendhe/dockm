@@ -1,4 +1,4 @@
-angular.module('portainer.helpers').factory('ServiceHelper', [function ServiceHelperFactory() {
+angular.module('dockm.helpers').factory('ServiceHelper', [function ServiceHelperFactory() {
   'use strict';
 
   var helper = {};

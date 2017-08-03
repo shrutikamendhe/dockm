@@ -5,7 +5,7 @@ import (
 	"net/url"
 
 	"github.com/orcaman/concurrent-map"
-	"github.com/portainer/portainer"
+	"github.com/shrutikamendhe/dockm/api"
 )
 
 // Manager represents a service used to manage Docker proxies.
@@ -15,7 +15,7 @@ type Manager struct {
 }
 
 // NewManager initializes a new proxy Service
-func NewManager(resourceControlService portainer.ResourceControlService, teamMembershipService portainer.TeamMembershipService, settingsService portainer.SettingsService) *Manager {
+func NewManager(resourceControlService dockm.ResourceControlService, teamMembershipService dockm.TeamMembershipService, settingsService dockm.SettingsService) *Manager {
 	return &Manager{
 		proxies: cmap.New(),
 		proxyFactory: &proxyFactory{
@@ -28,7 +28,7 @@ func NewManager(resourceControlService portainer.ResourceControlService, teamMem
 
 // CreateAndRegisterProxy creates a new HTTP reverse proxy and adds it to the registered proxies.
 // It can also be used to create a new HTTP reverse proxy and replace an already registered proxy.
-func (manager *Manager) CreateAndRegisterProxy(endpoint *portainer.Endpoint) (http.Handler, error) {
+func (manager *Manager) CreateAndRegisterProxy(endpoint *dockm.Endpoint) (http.Handler, error) {
 	var proxy http.Handler
 
 	endpointURL, err := url.Parse(endpoint.URL)

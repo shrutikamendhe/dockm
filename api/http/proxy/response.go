@@ -7,12 +7,12 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/portainer/portainer"
+	"github.com/shrutikamendhe/dockm/api"
 )
 
 const (
-	// ErrEmptyResponseBody defines an error raised when portainer excepts to parse the body of a HTTP response and there is nothing to parse
-	ErrEmptyResponseBody = portainer.Error("Empty response body")
+	// ErrEmptyResponseBody defines an error raised when dockm excepts to parse the body of a HTTP response and there is nothing to parse
+	ErrEmptyResponseBody = dockm.Error("Empty response body")
 )
 
 func extractJSONField(jsonObject map[string]interface{}, key string) map[string]interface{} {
@@ -68,12 +68,12 @@ func getResponseBodyAsGenericJSON(response *http.Response) (interface{}, error) 
 
 func writeAccessDeniedResponse() (*http.Response, error) {
 	response := &http.Response{}
-	err := rewriteResponse(response, portainer.ErrResourceAccessDenied, http.StatusForbidden)
+	err := rewriteResponse(response, dockm.ErrResourceAccessDenied, http.StatusForbidden)
 	return response, err
 }
 
 func rewriteAccessDeniedResponse(response *http.Response) error {
-	return rewriteResponse(response, portainer.ErrResourceAccessDenied, http.StatusForbidden)
+	return rewriteResponse(response, dockm.ErrResourceAccessDenied, http.StatusForbidden)
 }
 
 func rewriteResponse(response *http.Response, newResponseData interface{}, statusCode int) error {

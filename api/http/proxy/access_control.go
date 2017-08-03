@@ -1,8 +1,8 @@
 package proxy
 
-import "github.com/portainer/portainer"
+import "github.com/shrutikamendhe/dockm/api"
 
-func canUserAccessResource(userID portainer.UserID, userTeamIDs []portainer.TeamID, resourceControl *portainer.ResourceControl) bool {
+func canUserAccessResource(userID dockm.UserID, userTeamIDs []dockm.TeamID, resourceControl *dockm.ResourceControl) bool {
 	for _, authorizedUserAccess := range resourceControl.UserAccesses {
 		if userID == authorizedUserAccess.UserID {
 			return true

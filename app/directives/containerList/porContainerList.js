@@ -1,4 +1,4 @@
-angular.module('portainer')
+angular.module('dockm')
 .controller('porContainerListController', ['Pagination',
 function (Pagination) {
   var ctrl = this;

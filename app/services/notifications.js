@@ -1,4 +1,4 @@
-angular.module('portainer.services')
+angular.module('dockm.services')
 .factory('Notifications', ['$sanitize', function NotificationsFactory($sanitize) {
   'use strict';
   var service = {};

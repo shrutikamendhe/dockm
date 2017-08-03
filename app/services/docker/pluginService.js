@@ -1,4 +1,4 @@
-angular.module('portainer.services')
+angular.module('dockm.services')
 .factory('PluginService', ['$q', 'Plugin', 'SystemService', function PluginServiceFactory($q, Plugin, SystemService) {
   'use strict';
   var service = {};

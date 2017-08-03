@@ -1,5 +1,5 @@
 angular
-.module('portainer')
+.module('dockm')
 .directive('rdWidget', function rdWidget() {
   var directive = {
     scope: {

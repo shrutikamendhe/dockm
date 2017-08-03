@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-binary="portainer-$1-$2"
+binary="dockm-$1-$2"
 
 mkdir -p dist
 

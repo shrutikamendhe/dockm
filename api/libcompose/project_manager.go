@@ -4,7 +4,7 @@ import (
 	"path"
 	"path/filepath"
 
-	"github.com/portainer/portainer"
+	"github.com/shrutikamendhe/dockm/api"
 
 	"github.com/orcaman/concurrent-map"
 	"github.com/portainer/libcompose/config"
@@ -29,7 +29,7 @@ func NewProjectManager() *ProjectManager {
 
 // GetProject will return a project associated to a stack inside an endpoint.
 // If the project does not exists, it will be created.
-func (manager *ProjectManager) GetProject(stack *portainer.Stack, endpoint *portainer.Endpoint) (project.APIProject, error) {
+func (manager *ProjectManager) GetProject(stack *dockm.Stack, endpoint *dockm.Endpoint) (project.APIProject, error) {
 	proj, ok := manager.projects.Get(string(stack.ID))
 	if !ok {
 		return manager.createAndRegisterProject(stack, endpoint)
@@ -37,7 +37,7 @@ func (manager *ProjectManager) GetProject(stack *portainer.Stack, endpoint *port
 	return proj.(project.APIProject), nil
 }
 
-func (manager *ProjectManager) createAndRegisterProject(stack *portainer.Stack, endpoint *portainer.Endpoint) (project.APIProject, error) {
+func (manager *ProjectManager) createAndRegisterProject(stack *dockm.Stack, endpoint *dockm.Endpoint) (project.APIProject, error) {
 
 	// TODO: APIVersion should be retrieved from the endpoint
 	clientFactory, err := client.NewDefaultFactory(client.Options{

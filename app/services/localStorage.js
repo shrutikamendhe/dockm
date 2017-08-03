@@ -1,4 +1,4 @@
-angular.module('portainer.services')
+angular.module('dockm.services')
 .factory('LocalStorage', ['localStorageService', function LocalStorageFactory(localStorageService) {
   'use strict';
   return {

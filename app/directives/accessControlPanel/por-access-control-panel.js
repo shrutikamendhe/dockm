@@ -1,4 +1,4 @@
-angular.module('portainer').component('porAccessControlPanel', {
+angular.module('dockm').component('porAccessControlPanel', {
   templateUrl: 'app/directives/accessControlPanel/porAccessControlPanel.html',
   controller: 'porAccessControlPanelController',
   bindings: {

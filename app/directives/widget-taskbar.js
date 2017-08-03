@@ -1,5 +1,5 @@
 angular
-.module('portainer')
+.module('dockm')
 .directive('rdWidgetTaskbar', function rdWidgetTaskbar() {
   var directive = {
     requires: '^rdWidget',

@@ -1,7 +1,7 @@
 package libcompose
 
 import (
-	"github.com/portainer/portainer"
+	"github.com/shrutikamendhe/dockm/api"
 
 	"github.com/portainer/libcompose/project/options"
 	"golang.org/x/net/context"
@@ -20,7 +20,7 @@ func NewStackManager() *StackManager {
 }
 
 // Up will execute the Up operation against a stack inside the specified endpoint.
-func (manager *StackManager) Up(stack *portainer.Stack, endpoint *portainer.Endpoint) error {
+func (manager *StackManager) Up(stack *dockm.Stack, endpoint *dockm.Endpoint) error {
 	project, err := manager.projectManager.GetProject(stack, endpoint)
 	if err != nil {
 		return err
@@ -29,7 +29,7 @@ func (manager *StackManager) Up(stack *portainer.Stack, endpoint *portainer.Endp
 }
 
 // Down will execute the Down operation against a stack inside the specified endpoint.
-func (manager *StackManager) Down(stack *portainer.Stack, endpoint *portainer.Endpoint) error {
+func (manager *StackManager) Down(stack *dockm.Stack, endpoint *dockm.Endpoint) error {
 	project, err := manager.projectManager.GetProject(stack, endpoint)
 	if err != nil {
 		return err
@@ -38,7 +38,7 @@ func (manager *StackManager) Down(stack *portainer.Stack, endpoint *portainer.En
 }
 
 // Scale will execute the scale operation against a stack service inside the specified endpoint.
-func (manager *StackManager) Scale(stack *portainer.Stack, endpoint *portainer.Endpoint, service string, scale int) error {
+func (manager *StackManager) Scale(stack *dockm.Stack, endpoint *dockm.Endpoint, service string, scale int) error {
 	project, err := manager.projectManager.GetProject(stack, endpoint)
 	if err != nil {
 		return err

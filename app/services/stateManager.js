@@ -1,4 +1,4 @@
-angular.module('portainer.services')
+angular.module('dockm.services')
 .factory('StateManager', ['$q', 'SystemService', 'InfoHelper', 'LocalStorage', 'SettingsService', 'StatusService', function StateManagerFactory($q, SystemService, InfoHelper, LocalStorage, SettingsService, StatusService) {
   'use strict';
 

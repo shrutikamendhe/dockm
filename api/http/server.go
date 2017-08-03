@@ -1,34 +1,34 @@
 package http
 
 import (
-	"github.com/portainer/portainer"
-	"github.com/portainer/portainer/http/handler"
-	"github.com/portainer/portainer/http/proxy"
-	"github.com/portainer/portainer/http/security"
+	"github.com/shrutikamendhe/dockm/api"
+	"github.com/shrutikamendhe/dockm/api/http/handler"
+	"github.com/shrutikamendhe/dockm/api/http/proxy"
+	"github.com/shrutikamendhe/dockm/api/http/security"
 
 	"net/http"
 )
 
-// Server implements the portainer.Server interface
+// Server implements the dockm.Server interface
 type Server struct {
 	BindAddress            string
 	AssetsPath             string
 	AuthDisabled           bool
 	EndpointManagement     bool
-	Status                 *portainer.Status
-	UserService            portainer.UserService
-	TeamService            portainer.TeamService
-	TeamMembershipService  portainer.TeamMembershipService
-	EndpointService        portainer.EndpointService
-	ResourceControlService portainer.ResourceControlService
-	SettingsService        portainer.SettingsService
-	CryptoService          portainer.CryptoService
-	JWTService             portainer.JWTService
-	FileService            portainer.FileService
-	RegistryService        portainer.RegistryService
-	DockerHubService       portainer.DockerHubService
-	StackService           portainer.StackService
-	StackManager           portainer.StackManager
+	Status                 *dockm.Status
+	UserService            dockm.UserService
+	TeamService            dockm.TeamService
+	TeamMembershipService  dockm.TeamMembershipService
+	EndpointService        dockm.EndpointService
+	ResourceControlService dockm.ResourceControlService
+	SettingsService        dockm.SettingsService
+	CryptoService          dockm.CryptoService
+	JWTService             dockm.JWTService
+	FileService            dockm.FileService
+	RegistryService        dockm.RegistryService
+	DockerHubService       dockm.DockerHubService
+	StackService           dockm.StackService
+	StackManager           dockm.StackManager
 	Handler                *handler.Handler
 	SSL                    bool
 	SSLCert                string

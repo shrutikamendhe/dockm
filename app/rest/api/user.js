@@ -1,4 +1,4 @@
-angular.module('portainer.rest')
+angular.module('dockm.rest')
 .factory('Users', ['$resource', 'API_ENDPOINT_USERS', function UsersFactory($resource, API_ENDPOINT_USERS) {
   'use strict';
   return $resource(API_ENDPOINT_USERS + '/:id/:entity/:entityId', {}, {

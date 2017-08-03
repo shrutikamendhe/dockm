@@ -6,8 +6,8 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/portainer/portainer"
-	httperror "github.com/portainer/portainer/http/error"
+	"github.com/shrutikamendhe/dockm/api"
+	httperror "github.com/shrutikamendhe/dockm/api/http/error"
 )
 
 // Handler is a collection of all the service handlers.
@@ -32,13 +32,13 @@ type Handler struct {
 
 const (
 	// ErrInvalidJSON defines an error raised the app is unable to parse request data
-	ErrInvalidJSON = portainer.Error("Invalid JSON")
+	ErrInvalidJSON = dockm.Error("Invalid JSON")
 	// ErrInvalidRequestFormat defines an error raised when the format of the data sent in a request is not valid
-	ErrInvalidRequestFormat = portainer.Error("Invalid request data format")
+	ErrInvalidRequestFormat = dockm.Error("Invalid request data format")
 	// ErrInvalidQueryFormat defines an error raised when the data sent in the query or the URL is invalid
-	ErrInvalidQueryFormat = portainer.Error("Invalid query format")
-	// ErrEmptyResponseBody defines an error raised when portainer excepts to parse the body of a HTTP response and there is nothing to parse
-	// ErrEmptyResponseBody = portainer.Error("Empty response body")
+	ErrInvalidQueryFormat = dockm.Error("Invalid query format")
+	// ErrEmptyResponseBody defines an error raised when dockm excepts to parse the body of a HTTP response and there is nothing to parse
+	// ErrEmptyResponseBody = dockm.Error("Empty response body")
 )
 
 // ServeHTTP delegates a request to the appropriate subhandler.

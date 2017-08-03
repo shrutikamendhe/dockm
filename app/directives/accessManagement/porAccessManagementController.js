@@ -1,4 +1,4 @@
-angular.module('portainer')
+angular.module('dockm')
 .controller('porAccessManagementController', ['AccessService', 'Pagination', 'Notifications',
 function (AccessService, Pagination, Notifications) {
   var ctrl = this;

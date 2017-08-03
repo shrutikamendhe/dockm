@@ -3,8 +3,8 @@ package handler
 import (
 	"os"
 
-	"github.com/portainer/portainer"
-	httperror "github.com/portainer/portainer/http/error"
+	"github.com/shrutikamendhe/dockm/api"
+	httperror "github.com/shrutikamendhe/dockm/api/http/error"
 
 	"log"
 	"net/http"
@@ -47,7 +47,7 @@ func isHTML(acceptContent []string) bool {
 func (handler *FileHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	requestDirectory := path.Dir(r.URL.Path)
 	if !handler.allowedDirectories[requestDirectory] {
-		httperror.WriteErrorResponse(w, portainer.ErrResourceNotFound, http.StatusNotFound, handler.Logger)
+		httperror.WriteErrorResponse(w, dockm.ErrResourceNotFound, http.StatusNotFound, handler.Logger)
 		return
 	}
 

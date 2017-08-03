@@ -1,8 +1,7 @@
 node_modules
 bower_components
-dist
-portainer-checksum.txt
-api/cmd/portainer/portainer*
+dockm-checksum.txt
+api/cmd/dockm/dockm*
 .tmp
 userdata
 /gruntfile.js

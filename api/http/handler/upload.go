@@ -1,9 +1,9 @@
 package handler
 
 import (
-	"github.com/portainer/portainer"
-	httperror "github.com/portainer/portainer/http/error"
-	"github.com/portainer/portainer/http/security"
+	"github.com/shrutikamendhe/dockm/api"
+	httperror "github.com/shrutikamendhe/dockm/api/http/error"
+	"github.com/shrutikamendhe/dockm/api/http/security"
 
 	"log"
 	"net/http"
@@ -17,7 +17,7 @@ import (
 type UploadHandler struct {
 	*mux.Router
 	Logger      *log.Logger
-	FileService portainer.FileService
+	FileService dockm.FileService
 }
 
 // NewUploadHandler returns a new instance of UploadHandler.
@@ -53,20 +53,20 @@ func (handler *UploadHandler) handlePostUploadTLS(w http.ResponseWriter, r *http
 		return
 	}
 
-	var fileType portainer.TLSFileType
+	var fileType dockm.TLSFileType
 	switch certificate {
 	case "ca":
-		fileType = portainer.TLSFileCA
+		fileType = dockm.TLSFileCA
 	case "cert":
-		fileType = portainer.TLSFileCert
+		fileType = dockm.TLSFileCert
 	case "key":
-		fileType = portainer.TLSFileKey
+		fileType = dockm.TLSFileKey
 	default:
-		httperror.WriteErrorResponse(w, portainer.ErrUndefinedTLSFileType, http.StatusInternalServerError, handler.Logger)
+		httperror.WriteErrorResponse(w, dockm.ErrUndefinedTLSFileType, http.StatusInternalServerError, handler.Logger)
 		return
 	}
 
-	err = handler.FileService.StoreTLSFile(portainer.EndpointID(ID), fileType, file)
+	err = handler.FileService.StoreTLSFile(dockm.EndpointID(ID), fileType, file)
 	if err != nil {
 		httperror.WriteErrorResponse(w, err, http.StatusInternalServerError, handler.Logger)
 		return

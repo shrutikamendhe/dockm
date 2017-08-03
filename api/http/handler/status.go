@@ -1,8 +1,8 @@
 package handler
 
 import (
-	"github.com/portainer/portainer"
-	"github.com/portainer/portainer/http/security"
+	"github.com/shrutikamendhe/dockm/api"
+	"github.com/shrutikamendhe/dockm/api/http/security"
 
 	"log"
 	"net/http"
@@ -15,11 +15,11 @@ import (
 type StatusHandler struct {
 	*mux.Router
 	Logger *log.Logger
-	Status *portainer.Status
+	Status *dockm.Status
 }
 
 // NewStatusHandler returns a new instance of StatusHandler.
-func NewStatusHandler(bouncer *security.RequestBouncer, status *portainer.Status) *StatusHandler {
+func NewStatusHandler(bouncer *security.RequestBouncer, status *dockm.Status) *StatusHandler {
 	h := &StatusHandler{
 		Router: mux.NewRouter(),
 		Logger: log.New(os.Stderr, "", log.LstdFlags),

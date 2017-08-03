@@ -1,7 +1,7 @@
 describe('ContainerController', function () {
     var $scope, $httpBackend, mockContainer, $routeParams;
 
-    beforeEach(module('portainer'));
+    beforeEach(module('dockm'));
 
 
     beforeEach(inject(function ($rootScope, $controller, _$routeParams_) {
@@ -22,8 +22,8 @@ describe('ContainerController', function () {
         $httpBackend.expectGET('dockerapi/containers/json').respond({
             'Created': 1421817232,
             'id': 'b17882378cee8ec0136f482681b764cca430befd52a9bfd1bde031f49b8bba9f',
-            'Image': 'portainer:latest',
-            'Name': '/portainer'
+            'Image': 'dockm:latest',
+            'Name': '/dockm'
         });
     }
 
@@ -33,8 +33,8 @@ describe('ContainerController', function () {
         $scope.container = {
             'Created': 1421817232,
             'id': 'b17882378cee8ec0136f482681b764cca430befd52a9bfd1bde031f49b8bba9f',
-            'Image': 'portainer:latest',
-            'Name': '/portainer'
+            'Image': 'dockm:latest',
+            'Name': '/dockm'
         };
         $scope.container.newContainerName = "newName";
 

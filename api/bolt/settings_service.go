@@ -1,8 +1,8 @@
 package bolt
 
 import (
-	"github.com/portainer/portainer"
-	"github.com/portainer/portainer/bolt/internal"
+	"github.com/shrutikamendhe/dockm/api"
+	"github.com/shrutikamendhe/dockm/api/bolt/internal"
 
 	"github.com/boltdb/bolt"
 )
@@ -17,13 +17,13 @@ const (
 )
 
 // Settings retrieve the settings object.
-func (service *SettingsService) Settings() (*portainer.Settings, error) {
+func (service *SettingsService) Settings() (*dockm.Settings, error) {
 	var data []byte
 	err := service.store.db.View(func(tx *bolt.Tx) error {
 		bucket := tx.Bucket([]byte(settingsBucketName))
 		value := bucket.Get([]byte(dbSettingsKey))
 		if value == nil {
-			return portainer.ErrSettingsNotFound
+			return dockm.ErrSettingsNotFound
 		}
 
 		data = make([]byte, len(value))
@@ -34,7 +34,7 @@ func (service *SettingsService) Settings() (*portainer.Settings, error) {
 		return nil, err
 	}
 
-	var settings portainer.Settings
+	var settings dockm.Settings
 	err = internal.UnmarshalSettings(data, &settings)
 	if err != nil {
 		return nil, err
@@ -43,7 +43,7 @@ func (service *SettingsService) Settings() (*portainer.Settings, error) {
 }
 
 // StoreSettings persists a Settings object.
-func (service *SettingsService) StoreSettings(settings *portainer.Settings) error {
+func (service *SettingsService) StoreSettings(settings *dockm.Settings) error {
 	return service.store.db.Update(func(tx *bolt.Tx) error {
 		bucket := tx.Bucket([]byte(settingsBucketName))
 
